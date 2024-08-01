@@ -1,8 +1,6 @@
 package array.sum_all_submatrices;
 
-import java.util.ArrayList;
-
-public class code {
+public class Code {
     public int solve(int[][] A) {
         int sum =0;
         for(int i=0; i<A.length; i++){
