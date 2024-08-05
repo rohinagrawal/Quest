@@ -7,10 +7,10 @@ For ith devotee B[i][0] = L, B[i][1] = R, B[i][2] = P, given by the 2D array B
 
 
 Problem Constraints
-1 <= A <= 2 * 105
+1 <= A <= 2 * 10^5
 1 <= L <= R <= A
-1 <= P <= 103
-0 <= len(B) <= 105
+1 <= P <= 10^3
+0 <= len(B) <= 10^5
 
 
 
