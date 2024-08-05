@@ -1,4 +1,4 @@
-package array.sum_all_submatrices;
+package dsa.array.sum_all_submatrices;
 
 public class Code {
     public int solve(int[][] A) {
