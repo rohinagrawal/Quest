@@ -1,7 +1,5 @@
 package array.rain_water_trapped;
 
-import com.sun.xml.internal.bind.v2.model.core.MaybeElement;
-
 public class Code {
     public int trap(final int[] A) {
         int[] left = new int[A.length];
