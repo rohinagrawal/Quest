@@ -1,3 +1,7 @@
+package data_struct_algo.hash_map.scrambled_word_from_array;
+
+import java.util.HashMap;
+
 public class Code {
     public void unscramble() {
     String[] words = {"baby", "referee", "cat", "dada", "dog", "bird", "ax", "baz"};
@@ -8,16 +12,36 @@ public class Code {
     String note5 = "dad";
     String note6 = "breadmaking";
     String note7 = "dadaa";
-    System.out.println(find(words, note1));
-    System.out.println(find(words, note2));
-    System.out.println(find(words, note3));
-    System.out.println(find(words, note4));
-    System.out.println(find(words, note5));
-    System.out.println(find(words, note6));
-    System.out.println(find(words, note7));
+    System.out.println(findScrambledWord(words, note1));
+    System.out.println(findScrambledWord(words, note2));
+    System.out.println(findScrambledWord(words, note3));
+    System.out.println(findScrambledWord(words, note4));
+    System.out.println(findScrambledWord(words, note5));
+    System.out.println(findScrambledWord(words, note6));
+    System.out.println(findScrambledWord(words, note7));
   }
   
-  public static String find(String[] words, String note){
-    
+  private String findScrambledWord(String[] words, String note){
+      HashMap<Character, Integer> noteCharCount = new HashMap<>();
+      for (int i = 0; i< note.length(); i++){
+          noteCharCount.put(note.charAt(i), noteCharCount.getOrDefault(note.charAt(i), 0) + 1);
+      }
+      for (String word: words){
+          for (int i = 0; i< word.length(); i++){
+                char c = word.charAt(i);
+                if (noteCharCount.containsKey(c)) {
+                    noteCharCount.put(c, noteCharCount.get(c) - 1);
+                    if (noteCharCount.get(c) == 0) {
+                        noteCharCount.remove(c);
+                    }
+                    if (noteCharCount.isEmpty()) {
+                        return word;
+                    }
+                } else {
+                    break;
+                }
+          }
+      }
+      return "-";
   }
 }
