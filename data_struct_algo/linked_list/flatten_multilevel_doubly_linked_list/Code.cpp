@@ -2,7 +2,7 @@ import<bits/stdc++.h>
 
 using namespace std;
 
-/*
+
 // Definition for a Node.
 class Node {
 public:
@@ -11,7 +11,7 @@ Node* prev;
 Node* next;
 Node* child;
 };
-*/
+
 
 class Code {
 public:
