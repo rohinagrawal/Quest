@@ -1,5 +1,4 @@
 # Reverse Nodes in k-Group
----
 
 ## Problem Description
 
