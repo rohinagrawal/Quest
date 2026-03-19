@@ -1,4 +1,4 @@
-package dsa.array.search_sorted_matrix;
+package array.search_sorted_matrix;
 
 import java.util.ArrayList;
 

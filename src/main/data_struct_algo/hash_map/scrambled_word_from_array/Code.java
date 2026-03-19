@@ -1,4 +1,4 @@
-package data_struct_algo.hash_map.scrambled_word_from_array;
+package hash_map.scrambled_word_from_array;
 
 import java.util.HashMap;
 

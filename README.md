@@ -32,10 +32,10 @@ Quest/
 
 ## Categories
 
-- [Arrays](data_struct_algo/array)
-- [Linked Lists](data_struct_algo/linked_list)
-- [Trees](data_struct_algo/tree)
-- [Graphs](data_struct_algo/graph)
+- [Arrays](src/main/data_struct_algo/array)
+- [Linked Lists](src/main/data_struct_algo/linked_list)
+- [Trees](src/main/data_struct_algo/tree)
+- [Graphs](src/main/data_struct_algo/graph)
 - ...
 
 ## How to Use
