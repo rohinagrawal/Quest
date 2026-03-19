@@ -13,4 +13,22 @@ public class Util {
         }
         return seconds + "s";
     }
+
+    public static void requireNonBlank(String value, String fieldName) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(fieldName + " must not be blank");
+        }
+    }
+
+    public static void requireNonNull(Object value, String fieldName) {
+        if (value == null) {
+            throw new IllegalArgumentException(fieldName + " must not be null");
+        }
+    }
+
+    public static void requirePositive(Duration value, String fieldName) {
+        if (value == null || value.isZero() || value.isNegative()) {
+            throw new IllegalArgumentException(fieldName + " must be positive");
+        }
+    }
 }

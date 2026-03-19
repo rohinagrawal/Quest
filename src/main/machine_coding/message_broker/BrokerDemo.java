@@ -47,7 +47,8 @@ public class BrokerDemo {
      * list-topics
      * register-publisher <publisherId> <topicName>
      * register-consumer  <consumerId>  <topicName>
-     * publish <topicName> <message text>
+     * publish <publisherId> <message text>
+     * publish-direct <topicName> <message text>
      * consumer-info <consumerId> <topicName>
      * reset-offset <consumerId> <topicName> <newOffset>
      * @param broker
@@ -100,7 +101,14 @@ public class BrokerDemo {
             }
             case "publish" -> {
                 if (parts.length < 3) {
-                    usage("publish <topicName> <message text>");
+                    usage("publish <publisherId> <message text>");
+                    return true;
+                }
+                broker.publishByPublisher(parts[1], parts[2]);
+            }
+            case "publish-direct" -> {
+                if (parts.length < 3) {
+                    usage("publish-direct <topicName> <message text>");
                     return true;
                 }
                 broker.publish(parts[1], parts[2]);
@@ -121,6 +129,10 @@ public class BrokerDemo {
                 }
                 broker.resetOffset(full[1], full[2], Long.parseLong(full[3]));
             }
+            case "help" -> printHelp();
+            case "exit" -> {
+                return false;
+            }
             default -> System.out.println("Unknown command '" + command + "'. Type 'help'.");
         }
         return true;
@@ -137,7 +149,8 @@ public class BrokerDemo {
                         "│ list-topics                │ List all active topics              │\n" +
                         "│ register-publisher <id> <t>│ Bind publisher to topic             │\n" +
                         "│ register-consumer  <id> <t>│ Subscribe consumer to topic         │\n" +
-                        "│ publish <topic> <msg…>     │ Publish message directly to topic   │\n" +
+                        "│ publish <pubId> <msg…>     │ Publish using registered publisher   │\n" +
+                        "│ publish-direct <t> <msg…>  │ Publish directly to topic (admin)   │\n" +
                         "│ consumer-info  <id> <t>    │ Show offset & lag for consumer      │\n" +
                         "│ reset-offset <id> <t> <n>  │ Reset consumer offset & replay      │\n" +
                         "│ help                       │ Show this help                      │\n" +

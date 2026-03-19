@@ -21,7 +21,7 @@ class TopicPublisherTest {
 
         publisher.publish("hello");
 
-        verify(broker).publish("orders", "hello");
+        verify(broker).publishByPublisher("pub-1", "hello");
         verifyNoMoreInteractions(broker);
     }
 
@@ -34,8 +34,8 @@ class TopicPublisherTest {
         publisher.publish("m1");
         publisher.publish("m2");
 
-        verify(broker).publish("payments", "m1");
-        verify(broker).publish("payments", "m2");
+        verify(broker).publishByPublisher("pub-9", "m1");
+        verify(broker).publishByPublisher("pub-9", "m2");
         assertThat(publisher.getPublisherId()).isEqualTo("pub-9");
         assertThat(publisher.getTopicName()).isEqualTo("payments");
     }

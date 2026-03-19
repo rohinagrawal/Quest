@@ -15,6 +15,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("InMemoryBrokerService Functional Flow Tests")
 class InMemoryBrokerServiceTest {
@@ -165,6 +166,29 @@ class InMemoryBrokerServiceTest {
                 .first()
                 .extracting(TopicInfo::getRetentionPeriod)
                 .isEqualTo(Duration.ofMinutes(2));
+    }
+
+    @Test
+    @DisplayName("publishByPublisher fails when publisher is not registered")
+    void publishByPublisherFailsForUnknownPublisher() {
+        broker.createTopic("orders", Duration.ofHours(1));
+
+        assertThatThrownBy(() -> broker.publishByPublisher("missing", "payload"))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Publisher not found");
+    }
+
+    @Test
+    @DisplayName("deleteTopic unregisters publishers bound to that topic")
+    void deleteTopicRemovesPublishersForTopic() {
+        broker.createTopic("orders", Duration.ofHours(1));
+        Publisher publisher = broker.registerPublisher("p1", "orders");
+
+        broker.deleteTopic("orders");
+
+        assertThatThrownBy(() -> publisher.publish("after-delete"))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Publisher not found");
     }
 
     private Consumer consumer(String id, java.util.function.Consumer<Message> handler) {

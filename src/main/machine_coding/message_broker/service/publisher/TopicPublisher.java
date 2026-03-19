@@ -15,7 +15,7 @@ public class TopicPublisher implements Publisher {
 
     @Override
     public void publish(String message) {
-        brokerService.publish(topicName, message);
+        brokerService.publishByPublisher(publisherId, message);
     }
 }
 

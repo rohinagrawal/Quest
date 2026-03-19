@@ -13,6 +13,7 @@ public interface BrokerService {
     void deleteTopic(String topicName);
     Publisher registerPublisher(String publisherId, String topicName);
     void registerConsumer(String consumerId, String topicName, Consumer consumer);
+    void publishByPublisher(String publisherId, String message);
     void publish(String topicName, String message);
     void resetOffset(String consumerId, String topicName, long newOffset);
     ConsumerInfo getConsumerInfo(String consumerId, String topicName);

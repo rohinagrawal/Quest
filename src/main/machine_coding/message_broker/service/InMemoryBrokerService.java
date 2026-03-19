@@ -5,13 +5,13 @@ import message_broker.config.BrokerConfig;
 import message_broker.dto.ConsumerInfo;
 import message_broker.dto.TopicInfo;
 import message_broker.exception.DuplicateTopicException;
+import message_broker.exception.PublisherNotFoundException;
 import message_broker.exception.TopicNotFoundException;
 import message_broker.pojo.ConsumerState;
 import message_broker.pojo.Message;
 import message_broker.pojo.Topic;
 import message_broker.repository.InMemory;
 import message_broker.service.consumer.Consumer;
-import message_broker.service.consumer.LoggingConsumer;
 import message_broker.service.publisher.Publisher;
 import message_broker.service.publisher.TopicPublisher;
 
@@ -24,6 +24,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static message_broker.utils.Util.*;
 
 @Slf4j
 public class InMemoryBrokerService implements BrokerService {
@@ -50,6 +52,8 @@ public class InMemoryBrokerService implements BrokerService {
     @Override
     public void createTopic(String topicName, Duration retentionPeriod) {
         checkRunning();
+        requireNonBlank(topicName, "topicName");
+        requirePositive(retentionPeriod, "retentionPeriod");
         if (inMemory.getTopics().putIfAbsent(topicName, new Topic(topicName, retentionPeriod)) != null) {
             throw new DuplicateTopicException(topicName);
         }
@@ -59,7 +63,11 @@ public class InMemoryBrokerService implements BrokerService {
     @Override
     public void deleteTopic(String topicName) {
         checkRunning();
-        Topic topic = getTopicOrThrow(topicName);
+        requireNonBlank(topicName, "topicName");
+        Topic topic = inMemory.getTopics().remove(topicName);
+        if (topic == null) {
+            throw new TopicNotFoundException(topicName);
+        }
 
         for (ConsumerState state : topic.getAllConsumerStates()) {
             String consumerId = state.getConsumerId();
@@ -70,19 +78,22 @@ public class InMemoryBrokerService implements BrokerService {
             }
         }
 
-        inMemory.getTopics().remove(topicName);
+        inMemory.getPublisherRegistry().entrySet()
+                .removeIf(entry -> topicName.equals(entry.getValue().getTopicName()));
         log.info("Topic deleted: '{}'", topicName);
     }
 
     @Override
     public Publisher registerPublisher(String publisherId, String topicName) {
         checkRunning();
+        requireNonBlank(publisherId, "publisherId");
+        requireNonBlank(topicName, "topicName");
         getTopicOrThrow(topicName);
 
         Publisher publisher = new TopicPublisher(publisherId, topicName, this);
 
         if (inMemory.getPublisherRegistry().putIfAbsent(publisherId, publisher) != null) {
-            throw new IllegalStateException("Publisher '" + publisherId + "' is already registered. Use a unique consumerId.");
+            throw new IllegalStateException("Publisher '" + publisherId + "' is already registered. Use a unique publisherId.");
         }
         log.info("Publisher '{}' registered on topic '{}'", publisherId, topicName);
         return publisher;
@@ -91,7 +102,14 @@ public class InMemoryBrokerService implements BrokerService {
     @Override
     public void registerConsumer(String consumerId, String topicName, Consumer consumer) {
         checkRunning();
+        requireNonBlank(consumerId, "consumerId");
+        requireNonBlank(topicName, "topicName");
+        Objects.requireNonNull(consumer, "consumer must not be null");
         Topic topic = getTopicOrThrow(topicName);
+
+        if (!consumerId.equals(consumer.getConsumerId())) {
+            throw new IllegalArgumentException("consumerId must match consumer.getConsumerId()");
+        }
 
         if (inMemory.getConsumerRegistry().putIfAbsent(consumerId, consumer) != null) {
             throw new IllegalStateException("Consumer '" + consumerId + "' is already registered. Use a unique consumerId.");
@@ -112,12 +130,31 @@ public class InMemoryBrokerService implements BrokerService {
     }
 
     @Override
+    public void publishByPublisher(String publisherId, String message) {
+        checkRunning();
+        requireNonBlank(publisherId, "publisherId");
+        requireNonNull(message, "message");
+
+        Publisher publisher = inMemory.getPublisherRegistry().get(publisherId);
+        if (publisher == null) {
+            throw new PublisherNotFoundException(publisherId);
+        }
+        publishInternal(publisher.getTopicName(), message, publisherId);
+    }
+
+    @Override
     public void publish(String topicName, String message) {
         checkRunning();
+        requireNonBlank(topicName, "topicName");
+        requireNonNull(message, "message");
+        publishInternal(topicName, message, "direct");
+    }
+
+    private void publishInternal(String topicName, String message, String source) {
         Topic topic = getTopicOrThrow(topicName);
 
         Message msg = topic.publish(message);
-        log.info("Published to '{}' -> {}", topicName, msg);
+        log.info("Published to '{}' by '{}' -> {}", topicName, source, msg);
 
         for (ConsumerState state : topic.getAllConsumerStates()) {
             dispatchToConsumer(state, msg);
@@ -127,6 +164,8 @@ public class InMemoryBrokerService implements BrokerService {
     @Override
     public void resetOffset(String consumerId, String topicName, long newOffset) {
         checkRunning();
+        requireNonBlank(consumerId, "consumerId");
+        requireNonBlank(topicName, "topicName");
         Topic topic = getTopicOrThrow(topicName);
         ConsumerState state = getConsumerStateOrThrow(topic, consumerId);
 
@@ -146,6 +185,10 @@ public class InMemoryBrokerService implements BrokerService {
         Consumer consumer = inMemory.getConsumerRegistry().get(consumerId);
         ExecutorService executor = inMemory.getConsumerExecutors().get(consumerId);
 
+        if (consumer == null || executor == null || executor.isShutdown()) {
+            throw new IllegalStateException("Consumer '" + consumerId + "' is not active on topic '" + topicName + "'");
+        }
+
         for (Message replayMsg : replayMessages) {
             submitConsumerTask(executor, consumer, state, replayMsg, true);
         }
@@ -154,6 +197,8 @@ public class InMemoryBrokerService implements BrokerService {
     @Override
     public ConsumerInfo getConsumerInfo(String consumerId, String topicName) {
         checkRunning();
+        requireNonBlank(consumerId, "consumerId");
+        requireNonBlank(topicName, "topicName");
         Topic topic = getTopicOrThrow(topicName);
         ConsumerState state = getConsumerStateOrThrow(topic, consumerId);
 
@@ -204,6 +249,9 @@ public class InMemoryBrokerService implements BrokerService {
         if (consumer == null || executor == null || executor.isShutdown()) {
             return;
         }
+        if (msg.getOffset() < state.getCurrentOffset()) {
+            return;
+        }
         submitConsumerTask(executor, consumer, state, msg, false);
     }
 
@@ -215,6 +263,9 @@ public class InMemoryBrokerService implements BrokerService {
             boolean replay
     ) {
         executor.submit(() -> {
+            if (msg.getOffset() < state.getCurrentOffset()) {
+                return;
+            }
             try {
                 consumer.onMessage(msg);
                 state.markConsumed(msg.getOffset());
