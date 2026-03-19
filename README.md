@@ -1,54 +1,67 @@
-# Quest: Problem Solving, Data Structures, and Algorithms
+# Quest: Problem Solving, DSA, and Machine Coding
 
-Welcome to Quest! This repository contains a collection of Data Structures and Algorithms (DSA) problems along with their solutions in multiple programming languages.
+Quest is a practice repository for:
+- Data Structures and Algorithms (DSA) problems
+- Machine coding exercises
 
-## Structure
+Problems include a `Problem_Statement.md` and one or more language implementations (`Code.java`, `Code.js`, `Code.cpp`, etc.).
 
-The problems are organized into different categories. Each problem directory contains a `Problem_Statement.md` file with the problem statement and examples. The `Code` file contains implementations in various languages according to the file extensions.
+## Repository Layout
 
 ```
 Quest/
 ├── README.md
 ├── CONTRIBUTING.md
-├── data_struct_algo/
-│   ├── topic/
-│   │   ├── problem/
-│   │   │   ├── Problem_Statement.md
-│   │   │   ├── Code.java
-│   │   │   ├── Code.js
-│   │   │   ├── Code.cpp
-│   │   ├── problem_2/
-│   │   │   ├── Problem_Statement.md
-│   │   │   ├── Code.java
-│   │   │   ├── Code.js
-│   │   │   ├── Code.cpp
-│   ├── linked_list/
-│   ├── tree/
-│   ├── graph/
-│   └── … (other categories)
+├── pom.xml
+├── src/
+│   ├── main/
+│   │   ├── data_struct_algo/
+│   │   │   ├── array/
+│   │   │   ├── hash_map/
+│   │   │   ├── linked_list/
+│   │   │   └── stack/
+│   │   └── machine_coding/
+│   │       ├── logger/
+│   │       ├── message_broker/
+│   │       └── splitwise/
+│   └── test/
+│       └── machine_coding/
+│           └── message_broker/
 ├── LICENSE
 └── .gitignore
 ```
 
-## Categories
+## Current Categories
 
-- [Arrays](src/main/data_struct_algo/array)
-- [Linked Lists](src/main/data_struct_algo/linked_list)
-- [Trees](src/main/data_struct_algo/tree)
-- [Graphs](src/main/data_struct_algo/graph)
-- ...
+### Data Structures and Algorithms
+- [Array](src/main/data_struct_algo/array)
+- [Hash Map](src/main/data_struct_algo/hash_map)
+- [Linked List](src/main/data_struct_algo/linked_list)
+- [Stack](src/main/data_struct_algo/stack)
+
+### Machine Coding
+- [Logger](src/main/machine_coding/logger)
+- [Message Broker](src/main/machine_coding/message_broker)
+- [Splitwise](src/main/machine_coding/splitwise)
 
 ## How to Use
 
-1. Navigate to the category directory.
-2. Open the specific problem directory.
-3. Read the `Problem_Statement.md` file.
-4. Review solutions in the directory (e.g., `Code.java`, `Code.js`, `Code.cpp`).
+1. Open a topic folder under `src/main/data_struct_algo` or `src/main/machine_coding`.
+2. Read the corresponding `Problem_Statement.md` (or `Question` in some modules).
+3. Review or run the implementation files in that folder.
 
-## How to Contribute
+## Build and Test
 
-Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to contribute to this repository.
+This project uses Maven and is configured for Java 21.
+
+```bash
+mvn clean test
+```
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a PR.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
