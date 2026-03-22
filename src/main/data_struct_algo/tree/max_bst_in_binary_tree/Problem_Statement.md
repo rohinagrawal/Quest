@@ -1,4 +1,4 @@
-# Maximum Binary Search Tree in Binary Tree
+# Largest Binary Search Tree in Binary Tree
 
 ## Problem Description
 Given the root of a binary tree, find the **size of the largest subtree** that is also a Binary Search Tree (BST).
