@@ -72,7 +72,7 @@ Return that total. If there are no queries, return `0`. Because the sum can be l
    - `type` is `1` (update) or `2` (query)
    - `0 <= l <= r < n`
 
-Equivalent API shape: `solve(n, operations)` where `operations[i] = [type, l, r]`.
+Equivalent API shape: `sumSetBitQueries(n, operations)` where `operations[i] = [type, l, r]`.
 
 ## Output Format
 
