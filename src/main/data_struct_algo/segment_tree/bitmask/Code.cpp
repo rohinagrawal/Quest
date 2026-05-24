@@ -75,22 +75,4 @@ public:
         segmentTree[treeIndex] = merge(segmentTree[2*treeIndex+1], segmentTree[2*treeIndex+2]);
         return;
     }
-
-    /*void update_v2(vector<int> &arr, int updateLeft, int updateRight, vector<int> &segmentTree, int rangeStart, int rangeEnd, int treeIndex) {
-        if (rangeEnd < updateLeft || rangeStart > updateRight) {
-            return;
-        } else {
-            if (rangeStart == rangeEnd) {
-                int updateValue = 1-arr[rangeStart];
-                segmentTree[treeIndex] = updateValue;
-                arr[rangeStart] = updateValue;
-                return;
-            }
-            int mid = (rangeEnd + rangeStart)/2;
-            update(arr, updateLeft, updateRight, segmentTree, rangeStart, mid, 2*treeIndex+1);
-            update(arr, updateLeft, updateRight, segmentTree, mid+1, rangeEnd, 2*treeIndex+2);
-            segmentTree[treeIndex] = merge(segmentTree[2*treeIndex+1], segmentTree[2*treeIndex+2]);
-            return;
-        }
-    }*/
 };
