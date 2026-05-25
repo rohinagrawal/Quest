@@ -76,22 +76,24 @@ Use a segment tree with lazy propagation. For each segment of length `m`, mainta
 Range-set update (`arr[i] = x`):
 - `sum = m * x`
 - `sqSum = m * x^2`
-<code>
-a^2 + b^2 + c^2 =>
-j^2 + j^2 + j^2
-n*(j^2)
-</code>
+  $$
+  \begin{align}
+  a^2 + b^2 + c^2 &\Rightarrow j^2 + j^2 + j^2 \\
+  &= n \cdot j^2
+  \end{align}
+  $$
 
 Range-add update (`arr[i] = arr[i] + k`):
 - `(a1 + k)^2 + ... + (am + k)^2`
 - `= (a1^2 + ... + am^2) + 2k(a1 + ... + am) + m*k^2`
-<code>
-a^2 + b^2 + c^2 =>
-(a + k)^2 + (b + k)^2 + (c + k)^2
-a^2 + 2ka + k^2 + b^2 +2kb + k^2 + c^2 + 2kc + k^2
-(a^2 + b^2 + c^2) + k^2 + k^2 + k^2 + 2ka + 2kb + 2kc
-(a^2 + b^2 + c^2) + n*(k^2) + 2k(a + b + c)
-</code>
+  $$
+  \begin{align}
+  a^2 + b^2 + c^2 &\Rightarrow (a + k)^2 + (b + k)^2 + (c + k)^2 \\
+  &= a^2 + 2ka + k^2 + b^2 + 2kb + k^2 + c^2 + 2kc + k^2 \\
+  &= (a^2 + b^2 + c^2) + (k^2 + k^2 + k^2) + (2ka + 2kb + 2kc) \\
+  &= (a^2 + b^2 + c^2) + n \cdot k^2 + 2k(a + b + c)
+  \end{align}
+  $$
 
 So:
 - `sqSum = sqSum + 2*k*sum + m*k^2`
