@@ -1,4 +1,4 @@
-include <bits/stdc++.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -16,18 +16,18 @@ public:
         vector<int> segmentTree(4*n, 0);
         vector<int> lazyTree(4*n, 0);
         create(bitmask, segmentTree, lazyTree, 0, bitmask.size()-1, 0);
-        int sum = 0;
+        long long sum = 0;
         for (int i = 0; i<operations.size(); i++) {
             if (operations[i][0] == 1) {
                 //Update
                 update(segmentTree, lazyTree, 0, bitmask.size()-1, operations[i][1], operations[i][2], 0);
             } else {
                 //Query
-                sum+=(query(segmentTree, lazyTree, 0, bitmask.size()-1, operations[i][1], operations[i][2], 0)%MOD);
+                sum += query(segmentTree, lazyTree, 0, bitmask.size()-1, operations[i][1], operations[i][2], 0);
                 sum%=MOD;
             }
         }
-        return sum;
+        return static_cast<int>(sum);
     }
 
     void create(vector<int> &bitmask, vector<int> &segmentTree, vector<int> &lazyTree, int rangeStart, int rangeEnd, int treeIndex) {
