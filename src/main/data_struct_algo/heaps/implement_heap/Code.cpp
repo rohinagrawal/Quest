@@ -45,8 +45,18 @@ public:
             return ans;
         }
 
-        int removeNode(int val) {
-
+        int removeNode(int idx) {
+            int ans = this->heap[idx];
+            if (HeapType::MAX == this->heapType) {
+                this->heap[idx] = INT_MAX;
+            } else if (HeapType::MIN == this->heapType) {
+                this->heap[idx] = INT_MIN;
+            }
+            upHeapify(idx);
+            swapInHeap(0, this->heap.size()-1);
+            this->heap.pop_back();
+            downHeapify(0);
+            return ans;
         }
 
         void upHeapify(int index) {
