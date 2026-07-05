@@ -34,3 +34,5 @@ Out of Scope
 - System Failures & Resilience
 
 Prefer Forgoing the estimations at the moment, While Req gathering. Instead, Prefer doing it at the time of Designing if that estimate has a direct influence over the design.
+
+![img.png](img.png)
