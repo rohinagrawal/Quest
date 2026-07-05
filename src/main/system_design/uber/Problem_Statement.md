@@ -33,4 +33,4 @@ Out of Scope
 - CI / CD / Deployment
 - System Failures & Resilience
 
-I prefer Forgoing the estimations at this moment. Instead, I prefer doing it at the time of Design, if that estimate has a direct influence over the design.
+Prefer Forgoing the estimations at the moment, While Req gathering. Instead, Prefer doing it at the time of Designing if that estimate has a direct influence over the design.
