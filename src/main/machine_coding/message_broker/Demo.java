@@ -12,7 +12,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Scanner;
 
-public class BrokerDemo {
+public class Demo {
 
     public static void main(String[] args) {
         BrokerConfig config = new BrokerConfig(1);
