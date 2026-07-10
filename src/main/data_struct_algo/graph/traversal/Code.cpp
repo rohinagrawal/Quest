@@ -44,4 +44,29 @@ public:
         }
         return answer;
     }
+
+    vector<int> bfs_optimized(vector<vector<int>>& adj, int vertex) {
+        vector<int> answer;
+        vector<bool> visited (adj.size(),false);
+        queue<int> bfsQueue;
+        bfsQueue.push(vertex);
+        int level = 0;
+        visited[vertex] = true;
+        while (!bfsQueue.empty()) {
+            ++level;
+            int levelNodes = bfsQueue.size();
+            for (int i = 0; i<levelNodes; ++i) {
+                int temp = bfsQueue.front();
+                bfsQueue.pop();
+                for (int j=0; j<adj[temp].size(); ++j) {
+                    if (!visited[adj[temp][j]]) {
+                        bfsQueue.push(adj[temp][j]);
+                        visited[adj[temp][j]] = true;
+                    }
+                }
+                answer.push_back(temp);
+            }
+        }
+        return answer;
+    }
 };
