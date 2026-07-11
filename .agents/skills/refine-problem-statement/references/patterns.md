@@ -1,26 +1,53 @@
 # Problem Statement Patterns (Quest)
 
-Read the section that matches the target module. Gold files are the repo's best references.
+Skeletons and inference rules for `refine-problem-statement`. **Do not hardcode neighbor file paths** — discover siblings at runtime (see SKILL.md).
 
-## Gold References
+---
 
-| Type | Path | Why |
+## Find a Style Reference (dynamic)
+
+Use when you need to match local repo conventions (section names, hints, diagram style).
+
+```text
+1. parent = topic folder containing the target problem (e.g. .../graph/nearest_targets_from_sources → .../graph/)
+2. candidates = sibling folders with Problem_Statement.md (exclude target)
+3. open ONE candidate — prefer the file with the most lines, or a name sharing keywords
+4. skim headings + first example only (≤40 lines)
+5. mirror only what you see: Approach Hints? Complexity? inline diagrams?
+```
+
+Never maintain a fixed list of gold paths in this file — they drift.
+
+---
+
+## Stub Inference from Folder Name
+
+When `Problem_Statement.md` is a stub and `Code.*` is empty, infer from `snake_case` folder + parent topic. **BUILD tier** — full problem, not a heading wrapper.
+
+Optional: **one web search** to find a similar known problem (LeetCode, etc.) and confirm I/O, constraints, tie-breaks. Extract facts only; write in Quest template.
+
+| Folder / topic signals | Problem shape | Must include |
 | --- | --- | --- |
-| DSA (full) | `src/main/data_struct_algo/graph/traversal/Problem_Statement.md` | Complete I/O, examples, key points, optional hints |
-| DSA (visual) | `src/main/data_struct_algo/linked_list/reverse_k_nodes_group/Problem_Statement.md` | Inline list diagrams in examples |
-| DSA (compact) | `src/main/data_struct_algo/heaps/median_of_number_stream/Problem_Statement.md` | Tight example explanations |
-| DSA (algorithm-specific) | `src/main/data_struct_algo/graph/smallest_cost_path/Problem_Statement.md` | Required algorithm + ASCII graph |
-| Machine coding | `src/main/machine_coding/message_broker/Problem_Statement.md` | Requirements + edge cases |
-| System design | `src/main/system_design/uber/Problem_Statement.md` | Needs refinement; use structure only |
+| `nearest`, `closest`, `distance`, `shortest` + grid cues | BFS on grid | Cell legend, 4-dir movement, obstacles, tie-break, path trace, grid diagram |
+| `nearest` + `sources` / `targets` | Multi-source BFS | Output order (e.g. row-major), unreachable `-1`, path in Example 1 |
+| `traversal`, `bfs`, `dfs` | Graph traversal | Adjacency format, disconnected handling, neighbor order |
+| `cost`, `weight`, `dial` | Weighted shortest path | Edge format, weight bounds |
+| `tree`, `split`, `lca`, `diameter` | Tree algorithm | Root convention, edge indexing |
+| `reverse`, `rotate`, `k_group`, `linked_list` | Pointer manipulation | Before/after diagram, in-place rule |
+| `median`, `stream`, `heap` | Heap / two-heap | Prefix output, even/odd median rule |
+| `machine_coding/*` | API module | Requirements, deliverables, edge cases |
+| `system_design/*` | Architecture | Functional/non-functional, out of scope |
 
-## DSA Skeleton (default)
+---
+
+## DSA Skeleton
 
 ```markdown
 # Problem Title
 
 ## Problem Description
 
-[2–5 sentences: task, variants, special rules]
+[3–5 sentences: task, rules, tie-breaks, ordering]
 
 ---
 
@@ -39,7 +66,15 @@ Read the section that matches the target module. Gold files are the repo's best 
 ```
 
 **Explanation:**
-- [1–3 bullets]
+- [path trace or steps — required]
+- [core insight this example proves]
+
+### Example 2
+
+**Input:** ...
+**Output:** ...
+**Explanation:**
+- [tie, unreachable, or obstacle case]
 
 ---
 
@@ -56,16 +91,17 @@ Read the section that matches the target module. Gold files are the repo's best 
 ## Constraints
 
 - `1 <= n <= 10^5`
-- ...
 
 ---
 
 ## Key Points
 
-1. [Non-obvious rule only]
+1. [Non-obvious trap only]
 ```
 
-Add `## Approach Hints` and `## Complexity Analysis` only when siblings in the same topic folder use them.
+Add `## Approach Hints` / `## Complexity Analysis` only when the **dynamically chosen sibling** includes them.
+
+---
 
 ## Machine Coding Skeleton
 
@@ -74,7 +110,7 @@ Add `## Approach Hints` and `## Complexity Analysis` only when siblings in the s
 
 ## Problem Statement
 
-[One paragraph summary]
+[One paragraph]
 
 ## Functional Requirements
 
@@ -95,6 +131,8 @@ Add `## Approach Hints` and `## Complexity Analysis` only when siblings in the s
 2. Demo
 3. Tests
 ```
+
+---
 
 ## System Design Skeleton
 
@@ -122,9 +160,16 @@ Add `## Approach Hints` and `## Complexity Analysis` only when siblings in the s
 - ...
 ```
 
-Replace broken `![img](file.png)` with mermaid or ASCII; do not leave dangling image links.
+---
 
 ## Diagram Snippets
+
+**Grid**
+
+```text
+(0,0)S  (0,1).  (0,2)T
+(1,0).  (1,1)#  (1,2).
+```
 
 **Graph**
 
@@ -143,45 +188,34 @@ Before: 1 -> 2 -> 3 -> 4 -> 5
 After:  2 -> 1 -> 4 -> 3 -> 5
 ```
 
-**Histogram (trapping rain)**
-
-```text
-Index: 0  1  2  3  4  5  6
-Value: 5  4  1  4  3  2  7
-Water:       ~        ~  ~     (total = 11)
-```
-
-**Grid**
-
-```text
-o a a n
-e t a e
-i h k r
-```
-
-**Mermaid (flows only)**
+**Mermaid (flows only, ≤12 nodes)**
 
 ```mermaid
 flowchart LR
   Pub --> Topic --> C1
-  Topic --> C2
 ```
 
-## Anti-Patterns (seen in repo)
+---
+
+## Anti-Patterns
 
 | Bad | Fix |
 | --- | --- |
-| Title only (`# Morris Traversal`) | Infer from `Code.*` |
-| Flat legacy headings, double blank lines | Normalize to skeleton |
-| `Rain Water Trapped` image refs without files | ASCII histogram |
-| Repeating input format inside every example | Reference format once |
-| Tutorial-length hints on simple problems | Omit or ≤3 bullets |
+| One-liner under new headings | BUILD from stub-inference table |
+| Hardcoded gold file paths | Dynamic sibling discovery |
+| Multiple web searches | One query for similar-problem confirmation |
+| Example without Explanation | 2–3 bullets with path trace |
+| Related Problems / edge-case tables | Fold into Example 2; stay in tier line budget |
+| Broken `![img](file.png)` | ASCII from snippets above |
+
+---
 
 ## Length Targets
 
-| Type | Target lines |
+| Tier | Lines |
 | --- | --- |
-| Simple DSA | 40–80 |
-| Rich DSA (multi-mode) | 80–140 |
+| POLISH | 60–100 |
+| EXPAND | 80–120 |
+| BUILD | 90–140 |
 | Machine coding | 80–120 |
 | System design | 60–100 |

@@ -4,97 +4,144 @@ Use when improving, rewriting, or creating `Problem_Statement.md` under Quest.
 
 ## Goal
 
-Produce a **clear, scannable** statement that matches the best Quest examples while using **minimal tokens**. Add a diagram only when it replaces several sentences of explanation.
+Produce an **interview-ready** statement in **one pass**: clear task, explicit I/O, worked examples with explanations, numeric constraints. Optimize for **speed**, **output tokens**, and **tool cost**.
 
-## Before Editing
+**Target:** ≤4 tool rounds total. Write once → validate → fix `FAIL`s only → stop.
 
-1. Read the target `Problem_Statement.md` and any solution files in the same folder (`Code.*`, `Demo.java`, tests).
-2. Read **one** strong neighbor from the same area — not the whole repo:
-   - DSA: same topic folder, else `graph/traversal` or `linked_list/reverse_k_nodes_group`
-   - Machine coding: `machine_coding/message_broker`
-   - System design: pick the cleaner peer under `system_design/`
-3. Open [references/patterns.md](references/patterns.md) only for the matching problem type.
+---
+
+## Cost Budget
+
+| Resource | Limit |
+| --- | --- |
+| File reads | Target `Problem_Statement.md` + `Code.*` (if any) + [patterns.md](references/patterns.md) — **max 3 files** |
+| Repo neighbor | **At most 1** sibling discovered dynamically (see below) — headings skim only |
+| Web search | **At most 1** query — **BUILD stubs only**, to confirm a similar known problem exists |
+| Repo grep | Parent topic folder only; never whole-repo |
+| Write passes | **1** (no polish loop) |
+| Output length | See depth tiers — never exceed tier max |
+
+---
 
 ## Workflow
 
 ```
-Assess → Pick template → Draft minimal sections → Add diagram if needed → Trim → Validate
+Classify → Gather (parallel, budgeted) → Write once → Validate → Fix FAILs → Stop
 ```
 
-### 1. Assess (do not rewrite blindly)
+### 1. Classify (no reads)
 
-| Signal | Action |
-| --- | --- |
-| Stub or title only | Build from code + folder name |
-| Legacy flat headings (`Problem Description` without `#`) | Normalize to Quest template |
-| Missing examples / I/O / constraints | Add from code and tests |
-| Broken image refs (`![...](missing.png)`) | Replace with ASCII or mermaid |
-| Verbose tutorial (hints + complexity + follow-up) | Drop unless user asked or repo siblings include them |
-| Ambiguous traversal / ordering / tie-break | State rule explicitly; add tiny diagram |
+| State | Tier | Action |
+| --- | --- | --- |
+| ≤2 lines or &lt;25 words | **BUILD** | Author full problem |
+| Legacy flat headings | **EXPAND** | Normalize + fill gaps |
+| Good content, messy format | **POLISH** | Restructure only |
+| Missing sections only | **EXPAND** | Add from `Code.*` |
 
-### 2. Token Budget (strict)
+**Stub + empty `Code.*`:** you are **authoring**, not reformatting.
 
-**Always include:** title, problem description, examples, input format, output format, constraints.
+### 2. Gather (one parallel batch)
 
-**Include only when useful:**
-- **Key Points** — non-obvious rules only (≤5 bullets)
-- **Diagram** — when spatial/ordering clarity saves ≥3 sentences
-- **Approach Hints / Complexity** — only if sibling problems in the same topic use them, or user requests
+Always read in parallel:
+- Target `Problem_Statement.md`
+- `Code.*` / tests in same folder (if present)
+- [patterns.md](references/patterns.md) — skeleton + stub-inference table only
 
-**Never include:**
-- Restating constraints inside Key Points
-- Generic algorithm lectures the reader already knows
-- More than **2** full examples (use a 3rd only as a one-line edge case)
-- External image links unless the file exists in the folder
+**BUILD stubs only** — pick **one** optional source (not both):
 
-### 3. Writing Rules
+| Option | When | Cost |
+| --- | --- | --- |
+| **Web search** | Folder name ambiguous or need standard I/O/constraints | 1 query; extract ≤5 facts (shape, bounds, tie-break) |
+| **Sibling skim** | Need section style (hints? complexity? diagrams?) | `list_dir` parent topic → open **one** other `Problem_Statement.md` → read headings + first example only |
 
-- `# Title` then `## Section` headings; separate major sections with `---` when the file exceeds ~80 lines.
-- **Problem Description:** 2–5 short sentences. Bold only terms that change behavior (`directed`, `in-place`, `1-indexed`).
-- **Examples:** use `### Example N` with labeled **Input**, **Output**, **Explanation** (1–3 bullets).
-- Prefer inline literals: `` `A = [1,2,3]` `` over narrative repetition.
-- **Constraints:** bullet list; use `10^5` not `100000`.
-- Keep total length roughly **60–120 lines** for standard DSA; machine coding may run longer for requirements lists.
+Skip optional gather when stub-inference table clearly matches the folder name.
 
-### 4. Diagrams (pick one; smallest that works)
+**Web search rules:**
+- Query from folder name: e.g. `nearest targets sources grid BFS leetcode`
+- Use results only to **confirm** problem shape and standard constraints — do not paste external text
+- Do not search for algorithm tutorials or generic pattern articles
+- If search finds a known problem (LC 542, 286, etc.), align I/O and tie-breaks — still write in Quest template
 
-| Need | Prefer |
-| --- | --- |
-| Graph / weighted edge | ASCII: `(0) --3-- (1)` |
-| Linked list transform | Inline: `1 -> 2 -> 3` before/after in a `text` block |
-| Tree | Compact ASCII; mermaid only if depth > 3 |
-| Grid / matrix | `text` code block grid |
-| Histogram / trapping water | ASCII bars in `text` block |
-| Flow / state / API sequence | mermaid (≤12 nodes) |
+**Sibling discovery (no hardcoded paths):**
 
-Skip the diagram if a single example already disambiguates.
+```text
+parent = directory containing the target problem folder
+candidates = glob(parent/*/Problem_Statement.md) excluding target
+pick one: prefer longest file, or name sharing keywords with target folder
+skim: headings + whether Approach Hints / Complexity / diagrams exist
+do not open a second sibling
+```
 
-See [references/patterns.md](references/patterns.md) for copy-paste skeletons and gold-standard paths.
+### 3. Write once
 
-### 5. Problem-Type Overrides
+Pick depth tier; stay inside line budget.
 
-- **DSA** — default skeleton in patterns.md
-- **Machine coding** — requirements, assumptions, edge cases, deliverables; skip algorithmic complexity unless relevant
-- **System design** — scope in/out, functional + non-functional requirements, assumptions; no LeetCode-style I/O unless APIs are defined
+| Tier | When | Lines | Include |
+| --- | --- | --- | --- |
+| **POLISH** | Content already teaches the problem | 60–100 | Restructure; keep examples |
+| **EXPAND** | Missing I/O, constraints, examples | 80–120 | 2 examples + formats + bounds |
+| **BUILD** | Stub / title only | 90–140 | EXPAND + diagram/paths for spatial problems |
 
-### 6. Finish
+**BUILD checklist (all required):**
+1. Task, rules, tie-break / output order in description
+2. **Two** examples: **Input**, **Output**, **Explanation** (path trace or steps)
+3. Input Format + Output Format
+4. Constraints with numeric bounds (`10^5`)
+5. One ASCII diagram for grid / graph / tree / list (in Example 1)
+6. Key Points — non-obvious only (≤5 bullets)
+7. Approach Hints + Complexity — **only if** the one sibling skim shows them
 
-1. Write only the target `Problem_Statement.md` unless the user asked for more.
-2. Run validation:
+**Token savers (always):**
+- No `## Related Problems` section
+- No edge-case tables — cover edge cases in Example 2 explanation
+- No third full example
+- No wavefront / multi-panel diagrams — one grid with coordinates is enough
+- Bold only behavior-changing terms (`row-major`, `1-indexed`, `directed`)
+
+### 4. Validate and stop
 
 ```bash
 python3 .agents/skills/refine-problem-statement/scripts/validate-problem-statement.py <path/to/Problem_Statement.md>
 ```
 
-3. Fix all `FAIL` lines; treat `WARN` as optional polish unless the file was a stub.
+Fix every `FAIL`. Ignore `WARN` on length unless you exceeded tier max. **Stop** — no second pass.
+
+---
+
+## Anti-Patterns
+
+| Failure | Fix |
+| --- | --- |
+| **Heading transplant** | BUILD tier; stub-inference + optional web/sibling |
+| **Over-research** | >1 web search, >1 sibling, or whole-repo grep |
+| **Hardcoded neighbor paths** | Discover sibling via `list_dir` / `glob` on parent topic |
+| **Example-free** | Add Explanation bullets with path trace |
+| **Tutorial bloat** | Trim to tier max; drop Related Problems and edge tables |
+
+---
+
+## Writing Rules
+
+- `# Title` then `## Section`; `---` between major sections when &gt;80 lines
+- **Problem Description:** 3–5 sentences
+- **Examples:** `### Example N` — Explanation is mandatory (2–3 bullets)
+- **Constraints:** `10^5` not `100000`
+- Diagram snippets: [patterns.md](references/patterns.md)
+
+### Problem-type overrides
+
+- **DSA** — skeleton in patterns.md
+- **Machine coding** — requirements, assumptions, deliverables
+- **System design** — functional/non-functional, out of scope
+
+---
 
 ## Quality Bar
 
-A refined statement should let a reader answer in under a minute:
-
+Reader answers in under one minute:
 - What is the task?
 - What goes in and out?
 - What do the limits allow?
-- What does example 1 prove?
+- **What does Example 1 prove?**
 
-If those four are obvious without scrolling, the statement is done — do not add filler.
+If Example 1 has no Explanation, the refine is **not done**.

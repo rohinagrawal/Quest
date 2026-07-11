@@ -141,6 +141,48 @@ def stub_like(text: str) -> bool:
     return words < 25
 
 
+def word_count(text: str) -> int:
+    return len(re.findall(r"\w+", text))
+
+
+def heading_shell(text: str, headings: set[str]) -> bool:
+    """Structured template with too little substance (heading transplant)."""
+    if stub_like(text):
+        return False
+    words = word_count(text)
+    has_io = "input format" in headings and "output format" in headings
+    has_examples = "examples" in headings or bool(
+        re.search(r"^###\s+Example\b", text, flags=re.MULTILINE | re.IGNORECASE)
+    )
+    has_constraints = "constraints" in headings
+    return words < 200 and has_io and has_examples and has_constraints
+
+
+def examples_without_explanation(text: str) -> bool:
+    has_example = bool(re.search(r"^###\s+Example\b", text, flags=re.MULTILINE | re.IGNORECASE))
+    has_explanation = "**explanation:**" in text.lower() or "example explanation" in text.lower()
+    return has_example and not has_explanation
+
+
+def constraints_without_bounds(text: str, headings: set[str]) -> bool:
+    if "constraints" not in headings and "problem constraints" not in headings:
+        return False
+    section = ""
+    capture = False
+    for line in text.splitlines():
+        h = heading_text(line)
+        if h == "constraints" or h == "problem constraints":
+            capture = True
+            continue
+        if capture:
+            if line.startswith("## "):
+                break
+            section += line + "\n"
+    if not section.strip():
+        return True
+    return not re.search(r"(<=|>=|10\^|\d+\s*<=)", section)
+
+
 def validate(path: Path, reporter: Reporter) -> None:
     if not path.is_file():
         reporter.fail(f"missing file: {path}")
@@ -158,6 +200,11 @@ def validate(path: Path, reporter: Reporter) -> None:
 
     if stub_like(text):
         reporter.fail("file looks like a stub; expand before finishing")
+    elif heading_shell(text, headings):
+        reporter.fail(
+            "heading transplant: sections exist but content is too thin; "
+            "add worked examples with explanations (BUILD tier)"
+        )
     else:
         reporter.ok("substantive content")
 
@@ -178,10 +225,15 @@ def validate(path: Path, reporter: Reporter) -> None:
 
         if not labeled_io:
             reporter.fail("examples must label Input and Output clearly")
+        elif examples_without_explanation(text):
+            reporter.fail("examples need **Explanation** bullets with path trace or steps")
         elif "input format" not in headings and "output format" not in headings:
             reporter.warn("no dedicated Input/Output Format sections; acceptable if examples are explicit")
         else:
             reporter.ok("input/output format documented")
+
+        if constraints_without_bounds(text, headings):
+            reporter.fail("constraints need numeric bounds (e.g. 1 <= n <= 10^5)")
 
         examples = count_examples(text)
         if examples == 0 and "example input" not in text.lower():
@@ -213,8 +265,8 @@ def validate(path: Path, reporter: Reporter) -> None:
         reporter.ok("spacing OK")
 
     line_count = len(lines)
-    if kind == "dsa" and line_count > 160:
-        reporter.warn(f"{line_count} lines; consider trimming for token efficiency")
+    if kind == "dsa" and line_count > 180:
+        reporter.warn(f"{line_count} lines; trim tutorial extras (Related Problems, edge tables)")
     elif kind == "dsa":
         reporter.ok(f"length OK ({line_count} lines)")
 
