@@ -44,6 +44,16 @@
       "source": ".agents/skills/agents-bootstrap/SKILL.md",
       "hosts": ["codex", "cursor"],
       "docs": [".agents/skills/agents-bootstrap/SKILL.md"]
+    },
+    {
+      "id": "skill-refine-problem-statement",
+      "kind": "skill",
+      "source": ".agents/skills/refine-problem-statement/SKILL.md",
+      "hosts": ["codex", "cursor"],
+      "docs": [
+        ".agents/skills/refine-problem-statement/SKILL.md",
+        ".agents/skills/refine-problem-statement/references/patterns.md"
+      ]
     }
   ],
   "mcp_startups": []

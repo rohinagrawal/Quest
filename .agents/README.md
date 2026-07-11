@@ -94,6 +94,10 @@ For quick setup of this shared-agent layout in a new project, use:
 
 - `.agents/skills/agents-bootstrap/SKILL.md`
 
+For refining `Problem_Statement.md` files with minimal token use, use:
+
+- `.agents/skills/refine-problem-statement/SKILL.md`
+
 The source of truth for skills is `.agents/skills/`. If a tool needs a separate install location or symlink, keep that as a thin adapter only.
 
 ## Self-Improvement Boundary
