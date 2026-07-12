@@ -13,6 +13,8 @@ You are given an `N × M` grid that models a map with walkable streets, blocked 
 
 Movement is allowed in **four cardinal directions** (up, down, left, right). Each move costs `1` step. Sources, targets, and empty cells are walkable. Obstacles are not.
 
+**Other sources are not blockers.** A path from one source to its nearest target may pass through another source cell (or any number of sources). Only `#` cells are impassable.
+
 For **every source cell**, find the **nearest target** by minimum number of steps. If multiple targets are at the same minimum distance, choose the target with the smallest row index; if still tied, choose the smallest column index.
 
 Return one answer per source in **row-major order** (scan the grid top-to-bottom, left-to-right). If a source cannot reach any target, report distance `-1` and target coordinates `(-1, -1)`.
@@ -210,6 +212,7 @@ Use a fixed direction order (for example: up, left, down, right) so tie-breaking
 | Source in a sealed component | `-1` and `(-1, -1)` |
 | Single source, single target | Direct shortest-path result |
 | Many targets, many sources | One `O(N · M)` BFS still suffices |
+| Another source on the shortest path | **Not** a blocker — `S` cells are walkable |
 
 ---
 
