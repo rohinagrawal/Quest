@@ -8,6 +8,8 @@ Return the multiple as a **string** with **no leading zeros**. The answer can be
 
 Equivalently: among all strings over `{0, 1}` that parse to a positive multiple of `A`, return the one with the smallest numeric value.
 
+This problem is typically solved by treating remainders modulo `A` as graph states and running a breadth-first search (BFS) on that remainder-state graph (BFS on remainders).
+
 ---
 
 ## Examples
@@ -80,6 +82,33 @@ A = 3
 5. Prefer appending `0` before `1` at the same BFS level if you need deterministic tie-breaking among equal-length answers (numeric minimum favors shorter, then lexicographic).
 
 ---
+
+## Approach Hints
+
+### Required idea: BFS on remainder-state graph
+
+- Represent each state as the remainder r in [0, A-1] of a candidate binary-decimal string modulo A.
+- From a state r, two transitions exist: append `0` -> (10*r) % A, append `1` -> (10*r + 1) % A.
+- Start from the state produced by the string "1" (r = 1 % A). Perform BFS until you first reach remainder 0.
+- Mark remainders visited when enqueued; store parent[r] = previous remainder and digit[r] = appended digit used to reach r.
+- Reconstruct the answer by walking parents backwards from remainder 0 and reversing the collected digits.
+
+### Compact pseudocode
+
+```
+queue = [r1 = 1 % A]
+visited[r1] = true; parent[r1] = -1; digit[r1] = '1'
+while queue not empty:
+  r = queue.pop()
+  if r == 0: break
+  for d in [0,1]:
+	nr = (10*r + d) % A
+	if not visited[nr]:
+	  visited[nr] = true
+	  parent[nr] = r; digit[nr] = char(d)
+	  queue.push(nr)
+reconstruct string by following parent from 0 to root and reversing digits
+```
 
 ## Complexity Analysis
 
