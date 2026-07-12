@@ -52,7 +52,7 @@ Always read in parallel:
 | Option | When | Cost |
 | --- | --- | --- |
 | **Web search** | Folder name ambiguous or need standard I/O/constraints | 1 query; extract ≤5 facts (shape, bounds, tie-break) |
-| **Sibling skim** | Need section style (hints? complexity? diagrams?) | `list_dir` parent topic → open **one** other `Problem_Statement.md` → read headings + first example only |
+| **Sibling skim** | Need section style (hints? complexity? diagrams?) | `list_dir` parent topic → open **one** other `Problem_Statement.md` → skim headings + **Approach Hints** section shape |
 
 Skip optional gather when stub-inference table clearly matches the folder name.
 
@@ -78,18 +78,20 @@ Pick depth tier; stay inside line budget.
 
 | Tier | When | Lines | Include |
 | --- | --- | --- | --- |
-| **POLISH** | Content already teaches the problem | 60–100 | Restructure; keep examples |
-| **EXPAND** | Missing I/O, constraints, examples | 80–120 | 2 examples + formats + bounds |
-| **BUILD** | Stub / title only | 90–140 | EXPAND + diagram/paths for spatial problems |
+| **POLISH** | Content already teaches the problem | 60–110 | Restructure; keep examples and hints |
+| **EXPAND** | Missing I/O, constraints, examples | 80–130 | 2 examples + formats + bounds + hints if algorithmic |
+| **BUILD** | Stub / title only | 100–160 | EXPAND + diagram/paths + **Approach Hints** for algorithm problems |
 
 **BUILD checklist (all required):**
 1. Task, rules, tie-break / output order in description
-2. **Two** examples: **Input**, **Output**, **Explanation** (path trace or steps)
-3. Input Format + Output Format
-4. Constraints with numeric bounds (`10^5`)
-5. One ASCII diagram for grid / graph / tree / list (in Example 1)
-6. Key Points — non-obvious only (≤5 bullets)
-7. Approach Hints + Complexity — **only if** the one sibling skim shows them
+2. **Name the required technique** in Problem Description when the problem implies a specific algorithm (e.g. multi-source BFS, Dial's algorithm) — mirror `smallest_cost_path` / `nearest_targets_from_sources`
+3. **Two** examples: **Input**, **Output**, **Explanation** (path trace or steps)
+4. Input Format + Output Format
+5. Constraints with numeric bounds (`10^5`)
+6. One ASCII diagram for grid / graph / tree / list (in Example 1)
+7. Key Points — non-obvious only (≤5 bullets)
+8. **`## Approach Hints`** — required for graph/BFS/shortest-path/heap/tree-algorithm problems; see [patterns.md](references/patterns.md)
+9. **`## Complexity Analysis`** — brief time/space after Approach Hints
 
 **Token savers (always):**
 - No `## Related Problems` section
@@ -123,10 +125,30 @@ Fix every `FAIL`. Ignore `WARN` on length unless you exceeded tier max. **Stop**
 ## Writing Rules
 
 - `# Title` then `## Section`; `---` between major sections when &gt;80 lines
-- **Problem Description:** 3–5 sentences
+- **Problem Description:** 3–5 sentences; **name the required algorithm** when one exists (`multi-source BFS`, `Dial's algorithm`, …)
 - **Examples:** `### Example N` — Explanation is mandatory (2–3 bullets)
+- **Approach Hints:** required for algorithm-specific DSA — short subsections + compact pseudocode or steps (not a lecture)
+- **Complexity Analysis:** 2–4 bullets comparing naive vs intended approach when relevant
 - **Constraints:** `10^5` not `100000`
 - Diagram snippets: [patterns.md](references/patterns.md)
+
+### Approach Hints shape (match repo siblings)
+
+```markdown
+## Approach Hints
+
+### Required idea: <technique name>
+
+[2–4 bullets or compact pseudocode block]
+
+### <optional sub-step> (e.g. answering queries, bucket progression)
+
+[1–3 bullets]
+```
+
+- **Problem Description** calls out the technique in one sentence (like Dial's in `smallest_cost_path`, multi-source BFS in `nearest_targets_from_sources`)
+- **Approach Hints** carries the implementation sketch — keep pseudocode ≤15 lines
+- Skip Approach Hints only for trivial array/string problems with no named pattern
 
 ### Problem-type overrides
 

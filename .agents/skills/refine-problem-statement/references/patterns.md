@@ -13,7 +13,7 @@ Use when you need to match local repo conventions (section names, hints, diagram
 2. candidates = sibling folders with Problem_Statement.md (exclude target)
 3. open ONE candidate — prefer the file with the most lines, or a name sharing keywords
 4. skim headings + first example only (≤40 lines)
-5. mirror only what you see: Approach Hints? Complexity? inline diagrams?
+5. mirror: Problem Description technique callout, `## Approach Hints` subsections, `## Complexity Analysis`
 ```
 
 Never maintain a fixed list of gold paths in this file — they drift.
@@ -29,9 +29,9 @@ Optional: **one web search** to find a similar known problem (LeetCode, etc.) an
 | Folder / topic signals | Problem shape | Must include |
 | --- | --- | --- |
 | `nearest`, `closest`, `distance`, `shortest` + grid cues | BFS on grid | Cell legend, 4-dir movement, obstacles, tie-break, path trace, grid diagram |
-| `nearest` + `sources` / `targets` | Multi-source BFS | Output order (e.g. row-major), unreachable `-1`, path in Example 1 |
-| `traversal`, `bfs`, `dfs` | Graph traversal | Adjacency format, disconnected handling, neighbor order |
-| `cost`, `weight`, `dial` | Weighted shortest path | Edge format, weight bounds |
+| `nearest` + `sources` / `targets` | Multi-source BFS | Technique in description; `## Approach Hints` with seed-from-targets pseudocode |
+| `traversal`, `bfs`, `dfs` | Graph traversal | Adjacency format; Approach Hints for BFS/DFS steps |
+| `cost`, `weight`, `dial` | Weighted shortest path | Name **Dial's algorithm** in description; bucket steps in Approach Hints |
 | `tree`, `split`, `lca`, `diameter` | Tree algorithm | Root convention, edge indexing |
 | `reverse`, `rotate`, `k_group`, `linked_list` | Pointer manipulation | Before/after diagram, in-place rule |
 | `median`, `stream`, `heap` | Heap / two-heap | Prefix output, even/odd median rule |
@@ -48,6 +48,7 @@ Optional: **one web search** to find a similar known problem (LeetCode, etc.) an
 ## Problem Description
 
 [3–5 sentences: task, rules, tie-breaks, ordering]
+[When applicable: "solve this using **<technique>**" — e.g. multi-source BFS, Dial's algorithm]
 
 ---
 
@@ -97,9 +98,28 @@ Optional: **one web search** to find a similar known problem (LeetCode, etc.) an
 ## Key Points
 
 1. [Non-obvious trap only]
+
+---
+
+## Approach Hints
+
+### Required idea: <technique name>
+
+[compact pseudocode or 3–5 bullets — core algorithm only]
+
+### <sub-step if needed>
+
+[1–3 bullets — e.g. how to read answers, bucket scan order]
+
+---
+
+## Complexity Analysis
+
+- **Intended approach:** Time `O(...)`, Space `O(...)`
+- **Naive approach:** (optional one line when contrast helps)
 ```
 
-Add `## Approach Hints` / `## Complexity Analysis` only when the **dynamically chosen sibling** includes them.
+Include `## Approach Hints` and `## Complexity Analysis` for algorithm-specific DSA (graph, BFS/DFS, shortest path, heap, tree). Omit for trivial array/string transforms unless sibling in the same topic folder uses them.
 
 ---
 
@@ -214,8 +234,8 @@ flowchart LR
 
 | Tier | Lines |
 | --- | --- |
-| POLISH | 60–100 |
-| EXPAND | 80–120 |
-| BUILD | 90–140 |
+| POLISH | 60–110 |
+| EXPAND | 80–130 |
+| BUILD (with Approach Hints) | 100–160 |
 | Machine coding | 80–120 |
 | System design | 60–100 |
