@@ -19,7 +19,7 @@ For **every source cell**, find the **nearest target** by minimum number of step
 
 Return one answer per source in **row-major order** (scan the grid top-to-bottom, left-to-right). If a source cannot reach any target, report distance `-1` and target coordinates `(-1, -1)`.
 
-This is the per-source query version of the multi-source shortest-path pattern: instead of filling a distance field for the whole grid, answer only at source coordinates.
+Because the grid is unweighted and there are multiple sources and targets, solve this using **multi-source BFS** seeded from all `T` cells at distance `0` (not from sources). Read the nearest-target answer at each `S` after one `O(N · M)` pass.
 
 ---
 
