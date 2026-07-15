@@ -41,3 +41,6 @@ build/
 /.agents/.env.local
 /.agents/workspace/*
 !/.agents/workspace/README.md
+/.claude/
+/.codex/
+/.cursor/
