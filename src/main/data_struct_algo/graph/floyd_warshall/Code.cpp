@@ -13,7 +13,8 @@ public:
 
         for (int i = 0; i<adj.size(); ++i) {
             for (int j = 0; j<adj[i].size(); ++j) {
-                distance[i][adj[i][j].first] = adj[i][j].second;
+                // Handles weighted Self loop and parallel edges
+                distance[i][adj[i][j].first] =  min(distance[i][adj[i][j].first], adj[i][j].second);
             }
         }
 
