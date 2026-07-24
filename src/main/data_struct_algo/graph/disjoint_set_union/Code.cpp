@@ -36,8 +36,8 @@ public:
     }
 
     bool unionNodes(int nodeA, int nodeB, vector<int> &parent, vector<int> &size) {
-        int rootA = findRoot(nodeA);
-        int rootB = findRoot(nodeB);
+        int rootA = findRoot(nodeA, parent);
+        int rootB = findRoot(nodeB, parent);
         if (rootA == rootB) {
             return false;
         }
