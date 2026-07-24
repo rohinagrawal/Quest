@@ -8,19 +8,21 @@ public:
     //parent = {-1, -1, -1, -1, -1, ...}
     //size = {1, 1, 1, 1, 1, 1, ...}
 
-    void dsu(int n, vector<vector<int>> queries) {
+    vector<int> dsu(int n, vector<vector<int>> queries) {
         int components = n;
         vector<int> parent(n, -1);
         vector<int> size(n, 1);
+        vector<int> answer;
         for (vector<int> query: queries) {
             if (query[0] == 0) {
                 if (unionNodes(query[1], query[2], parent, size)) {
                     components--;
                 }
             } else {
-                std::cout << components;
+                answer.push_back(components);
             }
         }
+        return answer;
     }
 
     int findRoot(int node, vector<int> &parent) {
