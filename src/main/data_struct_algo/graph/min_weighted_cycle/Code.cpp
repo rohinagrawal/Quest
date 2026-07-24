@@ -43,4 +43,35 @@ public:
             return minn;
         }
     }
+
+    int  minCycle_optimized(vector<vector<pair<int, int>> > &adj) {
+        int n = adj.size();
+        vector<vector<int>> distance(n, vector<int>(n, INT_MAX));
+        for (int i=0; i<n; ++i) {
+            distance[i][i]=0;
+        }
+        for (int i = 0; i<adj.size(); ++i) {
+            for (int j=0; j<adj[i].size(); ++j) {
+                distance[i][adj[i][j].first] = min(distance[i][adj[i][j].first], adj[i][j].second);
+            }
+        }
+        for (int k=0; k<n; ++k) {
+            for (int i=0; i<n; ++i) {
+                for (int j=0; j<n; ++j) {
+                    if (i!=j && distance[i][k] != INT_MAX && distance[k][j] != INT_MAX) {
+                        distance[i][j] = min(distance[i][j], distance[i][k] + distance[k][j]);
+                    }
+                }
+            }
+        }
+        int minCycleWeight = INT_MAX;
+        for (int i=0; i<n; ++i) {
+            for (int j=0; j<n; ++j) {
+                if (i!=j && distance[i][j] != INT_MAX && distance[j][i] != INT_MAX) {
+                    minCycleWeight = min(minCycleWeight, distance[i][j] + distance[j][i]);
+                }
+            }
+        }
+        return (minCycleWeight==INT_MAX)?-1:minCycleWeight;
+    }
 };
