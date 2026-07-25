@@ -1,0 +1,10 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+class Code {
+public:
+    int stonesRemoved() {
+
+    }
+};
