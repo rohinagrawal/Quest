@@ -1,56 +1,98 @@
-Problem Description
-Given a matrix of integers A of size N x M and an integer B.
-In the given matrix every row and column is sorted in non-decreasing order. Find and return the position of B in the matrix in the given form:
-If A[i][j] = B then return (i * 1009 + j)
-If B is not present return -1.
+# Search a Row- and Column-Sorted Matrix
 
-Note 1: Rows are numbered from top to bottom and columns are numbered from left to right.
-Note 2: If there are multiple B in A then return the smallest value of i*1009 +j such that A[i][j]=B.
-Note 3: Expected time complexity is linear
-Note 4: Use 1-based indexing
+## Problem Description
 
+Given an `N x M` matrix `A` where **every row and every column is sorted** in non-decreasing order, and a target `B`, find `B`'s position. Using **1-based indexing**, if `A[i][j] = B` return `i * 1009 + j`; if `B` occurs multiple times, return the **smallest** such `i * 1009 + j` (topmost, then leftmost). Return `-1` if `B` is absent. Expected time is **linear** in `N + M`.
 
-Problem Constraints
-1 <= N, M <= 1000
--100000 <= A[i] <= 100000
--100000 <= B <= 100000
+Use the **staircase search**: start at the **top-right** corner. If the current value is too large, move left (drop a column); if too small, move down (drop a row). Each step eliminates a full row or column.
 
+---
 
-Input Format
-The first argument given is the integer matrix A.
-The second argument given is the integer B.
+## Examples
 
+### Example 1
 
-Output Format
-Return the position of B and if it is not present in A return -1 instead.
-
-
-Example Input
-Input 1:-
-A = [[1, 2, 3]
-[4, 5, 6]
-[7, 8, 9]]
+**Input:**
+```text
+A = [ [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9] ]
 B = 2
-Input 2:-
-A = [[1, 2]
-[3, 3]]
-B = 3
+```
 
-
-Example Output
-Output 1:-
+**Output:**
+```text
 1011
-Output 2:-
+```
+
+**Explanation:**
+- `B = 2` sits at row `1`, column `2` (1-indexed).
+- Position code `= 1 * 1009 + 2 = 1011`.
+
+### Example 2
+
+**Input:**
+```text
+A = [ [1, 2],
+      [3, 3] ]
+B = 3
+```
+
+**Output:**
+```text
 2019
+```
 
+**Explanation:**
+- `3` appears at `(2,1)` → `2*1009+1 = 2019` and `(2,2)` → `2020`.
+- The smallest code is **2019**, so ties resolve to the top-left-most occurrence.
 
-Example Explanation
-Expanation 1:-
-A[1][2] = 2
-1 * 1009 + 2 = 1011
-Explanation 2:-
-A[2][1] = 3
-2 * 1009 + 1 = 2019
-A[2][2] = 3
-2 * 1009 + 2 = 2020
-The minimum value is 2019
+---
+
+## Input Format
+
+- Integer matrix `A` of size `N x M` (rows and columns sorted non-decreasing).
+- Integer target `B`.
+
+## Output Format
+
+- `i * 1009 + j` (1-indexed) for the smallest such position, or `-1` if `B` is not present.
+
+---
+
+## Constraints
+
+- `1 <= N, M <= 10^3`
+- `-10^5 <= A[i][j] <= 10^5`
+- `-10^5 <= B <= 10^5`
+
+---
+
+## Key Points
+
+1. Start at the **top-right** (or bottom-left) — a corner where one direction increases and the other decreases lets each comparison discard a whole line.
+2. To honor the **smallest `i*1009+j`**, keep scanning down-column for equal values; prefer the smaller row, then smaller column.
+3. Binary-searching each row is `O(N log M)` — the staircase is strictly `O(N + M)`.
+
+---
+
+## Approach Hints
+
+### Required idea: staircase (top-right) search
+
+```text
+i = 1, j = M                     // 1-indexed top-right
+best = -1
+while i <= N and j >= 1:
+    if A[i][j] == B: best = i*1009 + j; j--   // look further left/up for smaller code
+    elif A[i][j] > B: j--                       // too big → drop column
+    else: i++                                   // too small → drop row
+return best
+```
+
+---
+
+## Complexity Analysis
+
+- **Staircase (intended):** Time `O(N + M)`, Space `O(1)`.
+- **Naive (scan all cells):** `O(N * M)` — ignores the sorted structure.

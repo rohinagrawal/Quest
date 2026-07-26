@@ -1,74 +1,110 @@
-# Shortest path on a grid with obstacles
+# Shortest Path on a Grid with Obstacles
 
-Problem
--------
-Given a 2D game board represented as a grid, compute the minimum number of steps required to move from a given start cell to a target cell while avoiding obstacles. Each cell is either walkable or blocked. Movement is allowed in four cardinal directions: up, down, left and right. If no path exists, return -1.
+## Problem Description
 
-Input
------
-- A 2D grid (matrix) of integers or booleans where each entry indicates whether the cell is walkable or blocked. Common representations:
-  - 0 = walkable, 1 = obstacle, or
-  - false = walkable, true = obstacle
-- A start coordinate: (startRow, startCol)
-- A target coordinate: (targetRow, targetCol)
+Given a 2D grid where each cell is **walkable** (`0`) or **blocked** (`1`), compute the minimum number of steps to move from a `start` cell to a `target` cell. Movement is allowed in the four cardinal directions (up, down, left, right); blocked cells cannot be entered. Return `-1` if the target is unreachable, `0` if `start == target`.
 
-Output
-------
-Return the minimum number of steps (edges) required to reach the target from the start. If the start equals the target, return 0. If the target is unreachable, return -1.
+Because every move costs the same, solve with **Breadth-First Search (BFS)** from the start — the first time BFS reaches the target, it does so via a shortest path.
 
-Examples
---------
-1) Matrix representation (0 = empty, 1 = obstacle)
+---
 
-Grid:
-[[0, 0, 0],
- [1, 0, 1],
- [0, 0, 0]]
+## Examples
 
-Start: (0,0), Target: (2,2)
-Answer: 4  // one shortest path: (0,0)->(0,1)->(1,1)->(2,1)->(2,2)
+### Example 1
 
-2) Start equals target
+**Input:**
+```text
+grid = [ [0, 0, 0],
+         [1, 0, 1],
+         [0, 0, 0] ]
+start = (0, 0)
+target = (2, 2)
+```
 
-Grid:
-[[0]]
+**Output:**
+```text
+4
+```
 
-Start: (0,0), Target: (0,0)
-Answer: 0
+**Explanation:**
+- Grid (`#` = blocked):
 
-3) No path
+```text
+(0,0)S  (0,1).  (0,2).
+(1,0)#  (1,1).  (1,2)#
+(2,0).  (2,1).  (2,2)T
+```
 
-Grid:
-[[0,1,0],
- [1,1,0],
- [0,1,0]]
+- One shortest route: `(0,0) → (0,1) → (1,1) → (2,1) → (2,2)` — **4** steps. The blocked cells force the path through the middle column.
 
-Start: (0,0), Target: (2,2)
-Answer: -1
+### Example 2
 
-Constraints & assumptions
------------------------
-- Grid dimensions: rows >= 1, cols >= 1. Coordinates are 0-based and guaranteed to be within bounds.
-- Cells marked as blocked cannot be traversed or entered.
-- Movement cost between adjacent walkable cells is 1 (unweighted grid).
+**Input:**
+```text
+grid = [ [0, 1, 0],
+         [1, 1, 0],
+         [0, 1, 0] ]
+start = (0, 0)
+target = (2, 2)
+```
 
-Key points / Implementation notes
---------------------------------
-- Use Breadth-First Search (BFS) from the start to find the shortest number of steps on an unweighted grid.
-- Track visited cells to avoid cycles and repeated work. Mark visited when enqueued.
-- Validate trivial cases early: if start or target is blocked, return -1; if start == target return 0.
-- Use a queue storing (row, col, distance) or maintain a level-size loop to increment distance per BFS layer.
+**Output:**
+```text
+-1
+```
 
-Time & Space complexity
------------------------
-- Time: O(R * C) where R and C are grid rows and columns — each cell is visited at most once.
-- Space: O(R * C) for the queue / visited set in the worst case.
+**Explanation:**
+- The start `(0,0)` is walled off — every neighbor is blocked or leads to a dead end separated from the target.
+- BFS exhausts all reachable cells without touching `(2,2)`, so the answer is `-1`.
 
-Hints
------
-- Prefer integer coordinate pairs rather than flattening indices unless helpful for cache locality.
-- When multiple neighbor orderings are possible, use the consistent ordering used elsewhere in the repo (e.g. up, left, down, right) to keep deterministic behavior for tests.
+---
 
-References in repo
------------------
-- Look at other graph BFS/shortest-path examples under `src/main/data_struct_algo/graph` to match style and helper utilities.
+## Input Format
+
+- `grid` — a 2D array of `0` (walkable) / `1` (blocked), `R` rows by `C` columns.
+- `start`, `target` — 0-based `(row, col)` coordinates, guaranteed in bounds.
+
+## Output Format
+
+- An integer: minimum steps, `0` if `start == target`, `-1` if unreachable.
+
+---
+
+## Constraints
+
+- `1 <= R, C <= 10^3`
+- `grid[i][j] ∈ {0, 1}`
+- Coordinates are 0-based and within bounds.
+
+---
+
+## Key Points
+
+1. **BFS = shortest path** on an unweighted grid; a DFS would not give the minimum step count.
+2. Mark a cell visited **when enqueued**, not when dequeued, to avoid re-adding it many times.
+3. Early exits: if `start` or `target` is blocked → `-1`; if `start == target` → `0`.
+
+---
+
+## Approach Hints
+
+### Required idea: BFS from the start
+
+```text
+if start or target blocked: return -1
+queue = [(start, 0)]; visited = {start}
+while queue:
+    (cell, d) = queue.popFront()
+    if cell == target: return d
+    for nb in 4-neighbors(cell):
+        if in-bounds and walkable and nb not visited:
+            visited.add(nb); queue.push((nb, d + 1))
+return -1
+```
+
+---
+
+## Complexity Analysis
+
+- **BFS (intended):** Time `O(R * C)`, Space `O(R * C)` — each cell enqueued at most once.
+- **DFS / repeated relaxation:** may revisit cells and does not yield the minimum directly.

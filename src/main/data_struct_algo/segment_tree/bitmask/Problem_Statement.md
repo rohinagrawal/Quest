@@ -31,7 +31,7 @@ Return that total. If there are no queries, return `0`. Because the sum can be l
   - `(1, 1, 3)` — flip indices `1..3`
   - `(2, 0, 4)` — count ones again
 
-**Trace:**
+**Explanation:**
 - Start: `00000`
 - After update 1: `11111` → query → **5**
 - After update 2: `10001` → query → **2**
@@ -47,7 +47,7 @@ Return that total. If there are no queries, return `0`. Because the sum can be l
   - `(1, 2, 3)` — flip `[2, 3]`
   - `(2, 0, 3)` — count ones
 
-**Trace:**
+**Explanation:**
 - Start: `0000`
 - After first flip: `1100`
 - After second flip: `1111` → query → **4**

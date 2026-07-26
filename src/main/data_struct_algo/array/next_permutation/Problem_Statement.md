@@ -1,67 +1,92 @@
-Problem Description
+# Next Permutation
 
-Implement the next permutation, which rearranges numbers into the numerically next greater permutation of numbers for a given array A of size N.
+## Problem Description
 
-If such arrangement is not possible, it must be rearranged as the lowest possible order, i.e., sorted in ascending order.
+Given an array `A` of `N` integers, rearrange it **in place** into the numerically **next greater** permutation. If no greater permutation exists (the array is in descending order), rearrange it into the **lowest** order (ascending). The replacement must use `O(1)` extra memory and must not call a library `next_permutation`.
 
-NOTE:
+The standard algorithm finds the rightmost ascending step, swaps it with the smallest element to its right that still exceeds it, then reverses the suffix to make it the smallest possible.
 
-    The replacement must be in-place, do not allocate extra memory.
-    DO NOT USE LIBRARY FUNCTION FOR NEXT PERMUTATION. Use of Library functions will disqualify your submission retroactively and will give you penalty points.
+---
 
+## Examples
 
+### Example 1
 
-Problem Constraints
-
-1 <= N <= 5 * 105
-
-1 <= A[i] <= 109
-
-
-
-Input Format
-
-The first and the only argument of input has an array of integers, A.
-
-
-
-Output Format
-
-Return an array of integers, representing the next permutation of the given array.
-
-
-
-Example Input
-
-Input 1:
-
+**Input:**
+```text
 A = [1, 2, 3]
+```
 
-Input 2:
-
-A = [3, 2, 1]
-
-
-
-Example Output
-
-Output 1:
-
+**Output:**
+```text
 [1, 3, 2]
+```
 
-Output 2:
+**Explanation:**
+- The rightmost `A[i] < A[i+1]` is `i = 1` (`2 < 3`).
+- Swap `2` with the next-larger element to its right (`3`) → `[1, 3, 2]`; the one-element suffix needs no reversal.
 
+### Example 2
+
+**Input:**
+```text
+A = [3, 2, 1]
+```
+
+**Output:**
+```text
 [1, 2, 3]
+```
 
+**Explanation:**
+- The array is fully descending, so **no** next-greater permutation exists.
+- The pivot search fails, so the whole array is reversed into ascending order `[1, 2, 3]`.
 
+---
 
-Example Explanation
+## Input Format
 
-Explanation 1:
+- A single integer array `A`, modified in place.
 
-Next permutation of [1, 2, 3] will be [1, 3, 2].
+## Output Format
 
-Explanation 2:
+- The array representing the next permutation.
 
-No arrangement is possible such that the number are arranged into the numerically next greater permutation of numbers.
-So will rearrange it in the lowest possible order.
+---
+
+## Constraints
+
+- `1 <= N <= 5 * 10^5`
+- `1 <= A[i] <= 10^9`
+- **In-place**, `O(1)` extra space; no library permutation function.
+
+---
+
+## Key Points
+
+1. Scan from the **right** for the first index `i` with `A[i] < A[i+1]` — the pivot; if none, reverse all (last permutation wraps to first).
+2. Swap the pivot with the **smallest element greater than it** in the suffix (which is sorted descending, so scan from the right).
+3. **Reverse the suffix** after the pivot to turn it from descending into ascending — the minimal tail.
+
+---
+
+## Approach Hints
+
+### Required idea: pivot, swap, reverse suffix
+
+```text
+i = N - 2
+while i >= 0 and A[i] >= A[i+1]: i--        // find pivot
+if i >= 0:
+    j = N - 1
+    while A[j] <= A[i]: j--                  // smallest > A[i] in suffix
+    swap(A[i], A[j])
+reverse(A, i+1, N-1)                          // make suffix ascending
+```
+
+---
+
+## Complexity Analysis
+
+- **Intended:** Time `O(N)`, Space `O(1)`.
+- **Naive (generate & sort permutations):** factorial time — infeasible.

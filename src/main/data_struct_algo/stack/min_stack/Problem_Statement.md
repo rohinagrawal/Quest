@@ -16,20 +16,22 @@ Implement the `Code` class:
 
 ---
 
-## Example 1
+## Examples
 
-### Input
-```
+### Example 1
+
+**Input:**
+```text
 ["MinStack","push","push","push","getMin","pop","top","getMin"]
 [[],[-2],[0],[-3],[],[],[],[]]
 ```
 
-### Output
-```
+**Output:**
+```text
 [null,null,null,null,-3,null,0,-2]
 ```
 
-### Explanation
+**Explanation:**
 ```c++
 Code minStack = new Code();
 minStack.push(-2);

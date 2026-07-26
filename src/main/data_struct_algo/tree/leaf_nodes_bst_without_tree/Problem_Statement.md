@@ -9,26 +9,52 @@ A node is a **leaf** if it has no left or right child.
 
 ## Examples
 
-### Example 1:
-```
-Input: preorder = [8, 5, 1, 7, 10, 12]
-Output: [1, 7, 12]
-Explanation: The BST formed by this preorder has leaf nodes 1, 7, and 12.
+### Example 1
+
+**Input:**
+```text
+preorder = [8, 5, 1, 7, 10, 12]
 ```
 
-### Example 2:
-```
-Input: preorder = [10, 5, 1, 7, 40, 50]
-Output: [1, 7, 50]
-Explanation: The leaf nodes of the BST are 1, 7, and 50.
+**Output:**
+```text
+[1, 7, 12]
 ```
 
-### Example 3:
+**Explanation:**
+- The BST rooted at `8` has left subtree `[5,1,7]` and right subtree `[10,12]`.
+- Using the monotonic-stack rule, a value that is neither a left nor right internal parent is a leaf: `1, 7, 12`.
+
+### Example 2
+
+**Input:**
+```text
+preorder = [10, 5, 1, 7, 40, 50]
 ```
-Input: preorder = [15]
-Output: [15]
-Explanation: A single-node BST has exactly one leaf node.
+
+**Output:**
+```text
+[1, 7, 50]
 ```
+
+**Explanation:**
+- `1` and `7` are the leaves under the left subtree of `5`; `50` is the rightmost leaf.
+- Output follows the order the leaves appear in the preorder array.
+
+### Example 3
+
+**Input:**
+```text
+preorder = [15]
+```
+
+**Output:**
+```text
+[15]
+```
+
+**Explanation:**
+- A single-node BST is itself a leaf.
 
 ## Constraints
 - `1 <= preorder.length <= 10^5`

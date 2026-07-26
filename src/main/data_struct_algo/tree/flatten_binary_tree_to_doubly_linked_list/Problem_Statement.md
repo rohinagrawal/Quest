@@ -10,19 +10,42 @@ In the flattened list:
 
 Return the `head` of the flattened doubly linked list.
 
-## Example
+## Examples
 
-```
-Input Tree:
+### Example 1
+
+**Input:**
+```text
       1
      / \
     2   5
    / \   \
   3   4   6
-
-Output List (head = 1):
-1 <-> 2 <-> 3 <-> 4 <-> 5 <-> 6
 ```
+
+**Output:**
+```text
+1 <-> 2 <-> 3 <-> 4 <-> 5 <-> 6   (head = 1)
+```
+
+**Explanation:**
+- Preorder visit order is `1, 2, 3, 4, 5, 6`.
+- Each node's `left` is rewired to the previous node (`prev`) and `right` to the next (`next`); no new nodes are created.
+
+### Example 2
+
+**Input:**
+```text
+   (empty tree)
+```
+
+**Output:**
+```text
+null
+```
+
+**Explanation:**
+- An empty tree flattens to an empty list, so the returned head is `null`.
 
 ## Constraints
 

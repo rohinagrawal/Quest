@@ -1,101 +1,112 @@
-# Smallest cost path in an undirected weighted graph (weights in [1..k])
+# Smallest Cost Path with Bounded Weights (Dial's Algorithm)
 
-Problem
--------
-Given an undirected weighted graph and two vertices (`start`, `end`), find the minimum total path cost from `start` to `end`.
+## Problem Description
 
-This variant has a strict constraint:
-- Every edge weight is an integer in the range **[1..k]**.
+Given an **undirected, weighted** graph and two vertices `start` and `end`, find the minimum total path cost between them. Every edge weight is an integer in the range **`[1..k]`**. Return `0` if `start == end`, and `-1` if `end` is unreachable.
 
-Because weights are bounded small integers, solve this using a **bucket-based shortest path approach (Dial's algorithm)**.
-Return `-1` if `end` is unreachable.
+Because the weights are small bounded integers, you do not need a heap-based Dijkstra. Solve it with **Dial's algorithm** — a bucket-based shortest path where `bucket[d]` holds vertices whose tentative distance is `d`. Scanning buckets in increasing distance order settles vertices in `O(V + E + k·V)` without a priority queue.
 
-Input
------
-- Graph as adjacency list: `List<List<Edge>>` or `Map<Integer, List<Edge>>`
-- `Edge { int to; int weight; }`
-- Integer vertices: `start`, `end`
-- Integer `k` such that every edge weight `w` satisfies `1 <= w <= k`
-- Vertex indexing is either 0-based or 1-based (document conversion in code)
+---
 
-Output
-------
-- Minimum cost from `start` to `end`
-- `0` if `start == end`
-- `-1` if no path exists
+## Examples
 
-Example
--------
-Vertices: `0, 1, 2`
+### Example 1
 
-Edges:
-- `0 --3-- 1`
-- `0 --1-- 2`
-- `2 --2-- 1`
+**Input:**
+```text
+vertices = {0, 1, 2}
+edges = [ {0,1,3}, {0,2,1}, {2,1,2} ]   // undirected {u, v, w}, w in [1..k]
+start = 0, end = 1, k = 3
+```
 
-Start: `0`, End: `1`
-Answer: `3` via `0 -> 2 -> 1`
+**Output:**
+```text
+3
+```
 
-Graph view:
+**Explanation:**
+- Graph:
 
 ```text
 (0) --3-- (1)
  |          ^
- 1          |
- |          2
+ 1          2
  v          |
-(2) --------
+(2) --------+
 ```
 
-Constraints & assumptions
--------------------------
-- `1 <= V`, `0 <= E`
-- Undirected graph: each `(u, v, w)` implies `(v, u, w)`
-- All weights satisfy `1 <= w <= k`
-- `k` is small enough to make bucket processing efficient
+- Direct edge `0→1` costs `3`; the detour `0→2→1` costs `1 + 2 = 3` as well.
+- Both routes tie at **3**, so the minimum cost is `3`.
 
-Dial's algorithm (required)
----------------------------
-- Maintain buckets by distance: `bucket[d]` stores vertices with tentative distance `d`
-- Initialize `dist[start] = 0`, push `start` in `bucket[0]`
-- Keep `currentDistance` and scan to next non-empty bucket
-- Pop a vertex `u`; if entry is outdated, skip
-- Relax each edge `(u, v, w)`:
-  - if `dist[u] + w < dist[v]`, update `dist[v]` and push `v` into `bucket[dist[v]]`
-- Stop when all reachable nodes are processed (or once `end` is finalized)
+### Example 2
 
-Bucket progression sketch:
+**Input:**
+```text
+vertices = {0, 1, 2, 3}
+edges = [ {0,1,2}, {1,2,1} ]     // vertex 3 is isolated
+start = 0, end = 3, k = 2
+```
+
+**Output:**
+```text
+-1
+```
+
+**Explanation:**
+- From `0` we reach `1` (cost 2) and `2` (cost 3), but nothing connects to `3`.
+- `end` stays at distance infinity, so the answer is `-1`.
+
+---
+
+## Input Format
+
+- Graph as an adjacency list of `Edge { int to; int weight; }`.
+- Integers `start`, `end`, and `k` (every weight `w` satisfies `1 <= w <= k`).
+
+## Output Format
+
+- Minimum cost from `start` to `end`; `0` if equal, `-1` if unreachable.
+
+---
+
+## Constraints
+
+- `1 <= V <= 10^5`, `0 <= E <= 2 * 10^5`
+- `1 <= w <= k`, with `k` small (bucket count is `k * (V - 1) + 1`)
+- Undirected: each `{u, v, w}` implies `{v, u, w}`.
+
+---
+
+## Key Points
+
+1. **Bounded weights** are what make Dial's applicable — buckets replace the heap.
+2. Allow duplicate bucket entries; **skip an outdated entry** when its recorded distance is already smaller.
+3. Allocate buckets up to `k * (V - 1)`; scan forward to the next non-empty bucket for the current distance.
+
+---
+
+## Approach Hints
+
+### Required idea: Dial's bucket-based shortest path
 
 ```text
-bucket[0]: [start]
-bucket[1]: []
-bucket[2]: [ ... ]
-bucket[3]: [ ... ]
-...
-currentDistance -> next non-empty bucket -> process -> relax -> push forward
+dist[] = INF; dist[start] = 0; bucket[0].add(start)
+d = 0
+while d <= maxDist:
+    while bucket[d] not empty:
+        u = bucket[d].pop()
+        if d > dist[u]: continue          // stale
+        for (v, w) in adj[u]:
+            if dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+                bucket[dist[v]].add(v)
+    d++
+return dist[end] == INF ? -1 : dist[end]
 ```
 
-Implementation notes (repo style)
----------------------------------
-- Use `Edge{int to; int weight;}` with adjacency lists under `src/main/data_struct_algo/graph`
-- Use `int[] dist` initialized to `Integer.MAX_VALUE`
-- Either:
-  - allocate buckets up to `k * V` (simple), or
-  - use circular buckets with careful forward scanning (optimized)
-- Allow duplicate bucket entries if needed; skip outdated entries on pop
-- Return `-1` when `dist[end]` remains `Integer.MAX_VALUE`
+---
 
-Complexity
-----------
-- Time: commonly `O(V + E + k)` for bounded-weight Dial variant (exact bound depends on bucket strategy)
-- Space: `O(V + E + B)`, where `B` is number of buckets
+## Complexity Analysis
 
-Edge cases
-----------
-- `start == end` -> return `0`
-- Disconnected graph -> return `-1`
-- Invalid vertex ids -> handle per repo convention (`-1` or exception)
-
-References in repo
-------------------
-- Reuse graph helper/Edge patterns from `src/main/data_struct_algo/graph`
+- **Dial's (intended):** Time `O(V + E + k·V)`, Space `O(V + E + k·V)` for the buckets.
+- **Binary-heap Dijkstra:** `O(E log V)` — correct but adds a log factor unnecessary for bounded weights.

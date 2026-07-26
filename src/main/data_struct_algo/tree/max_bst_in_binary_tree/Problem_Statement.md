@@ -12,22 +12,30 @@ A Binary Search Tree is a binary tree where:
 
 ## Examples
 
-### Example 1:
-```
-Input:
+### Example 1
+
+**Input:**
+```text
        10
       /  \
      5    15
     / \     \
    1   8    20
-
-Output: 3
-Explanation: The subtree rooted at node 5 with nodes [5, 1, 8] forms a valid BST of size 3.
 ```
 
-### Example 2:
+**Output:**
+```text
+3
 ```
-Input:
+
+**Explanation:**
+- The subtree rooted at `5` (`[5, 1, 8]`) is a valid BST of size `3`.
+- The whole tree is not a BST (`15`'s subtree is valid, but `10`'s children don't all satisfy the BST bounds), so `3` is the largest.
+
+### Example 2
+
+**Input:**
+```text
        50
       /  \
     30    60
@@ -35,21 +43,33 @@ Input:
   5  20 45  70
          /
         40
-
-Output: 4
-Explanation: The subtree rooted at node 60 with nodes [60, 45, 70, 40] forms a valid BST of size 4.
 ```
 
-### Example 3:
+**Output:**
+```text
+4
 ```
-Input:
+
+**Explanation:**
+- The subtree rooted at `60` (`[60, 45, 70, 40]`) is a valid BST of size `4`.
+- The left subtree under `30` is also a BST but only size `3`, so the answer is `4`.
+
+### Example 3
+
+**Input:**
+```text
        1
       / \
      2   3
-
-Output: 1
-Explanation: No subtree (except single nodes) forms a valid BST. Each single node is a BST of size 1.
 ```
+
+**Output:**
+```text
+1
+```
+
+**Explanation:**
+- No multi-node subtree satisfies the BST property, so the best is a single node → size `1`.
 
 ## Constraints
 - The number of nodes in the tree: `0 <= n <= 10^5`
