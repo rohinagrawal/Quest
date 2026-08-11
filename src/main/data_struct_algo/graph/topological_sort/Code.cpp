@@ -29,6 +29,9 @@ public:
                 }
             }
         }
+        if (order.size() != adj.size()) {
+            return {};
+        }
         return order;
     }
 };
