@@ -12,20 +12,20 @@ public:
                 inDegree[adj[i][j]]++;
             }
         }
-        queue<int> dfs;
+        queue<int> bfs;
         for (int i=0; i<inDegree.size(); ++i) {
             if (inDegree[i]==0) {
-                dfs.push(i);
+                bfs.push(i);
             }
         }
-        while (!dfs.empty()) {
-            int temp = dfs.front();
-            dfs.pop();
+        while (!bfs.empty()) {
+            int temp = bfs.front();
+            bfs.pop();
             order.push_back(temp);
             for (int j = 0; j<adj[temp].size(); ++j) {
                 inDegree[adj[temp][j]]--;
                 if (inDegree[adj[temp][j]]==0) {
-                    dfs.push(adj[temp][j]);
+                    bfs.push(adj[temp][j]);
                 }
             }
         }
