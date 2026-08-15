@@ -89,9 +89,36 @@ All `j` values across the `q` queries are **pairwise distinct**. An edge is remo
 
 ---
 
-## Notes
+## Key Points
 
-- Removals are **cumulative**: query `k` sees the forest produced by all `k` edge deletions so far, not only the two pieces created by the latest cut.
-- Edge `j` always refers to the **original** `j`-th input edge, even after earlier edges were removed.
-- A brute-force rebuild (BFS/DFS per query, skipping removed edges) costs `O(n · q)`.
-- A standard optimization processes queries **in reverse** (add edges back) with a **Disjoint Set Union (DSU)** to achieve `O(n + q)` time.
+1. Removals are **cumulative** — query `k` sees the forest after all `k` cuts, not just the latest split.
+2. Edge `j` always refers to the **original** `j`-th input edge, even after earlier removals.
+3. **Deletions are hard, unions are easy** — process queries in reverse so each removal becomes an "add edge back".
+4. The running max component size only **grows** as you re-add edges backward.
+
+---
+
+## Approach Hints
+
+### Required idea: offline reversal + DSU by size
+
+```text
+mark all queried edges removed
+build DSU from the surviving (never-removed) edges; track maxSize
+answers = []
+for k from q down to 1:                 // reverse order
+    answers[k] = maxSize                // state with edges 1..k still removed
+    union the endpoints of query-k's edge; update maxSize
+return answers
+```
+
+### Why reverse
+
+- A DSU supports fast `union` but not `split`; iterating backward turns every cut into a union, so the whole run is near-linear.
+
+---
+
+## Complexity Analysis
+
+- **Offline reverse + DSU (intended):** Time `O((n + q) · α(n))`, Space `O(n)`.
+- **Naive (BFS/DFS rebuild per query):** `O(n · q)` — far too slow at `n, q = 10^5`.

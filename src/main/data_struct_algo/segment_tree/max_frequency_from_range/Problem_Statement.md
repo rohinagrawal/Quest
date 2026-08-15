@@ -63,7 +63,35 @@ Process all queries and return one answer per query.
 
 ---
 
-## Notes
+## Key Points
 
-- The array being sorted is required for the intended **segment tree** approach: equal values form contiguous blocks, so the answer for `[L, R]` can be built from the ends of the range plus a range-maximum query on precomputed frequencies.
-- For an unsorted array, different techniques (e.g. Mo's algorithm) are needed.
+1. **Sorted input is the key** — equal values form one contiguous block, so a value's run length is well-defined.
+2. Precompute, for each index, the length of the run it belongs to; then a range-max over those run lengths answers most of the query.
+3. **Boundary correction:** the leftmost/rightmost partial runs may be clipped by `[L, R]`, so bound their contribution by the actual overlap.
+
+---
+
+## Approach Hints
+
+### Required idea: run-length compression + range-max segment tree
+
+```text
+compress equal values into runs; for each run know its [start, end]
+build a segment tree over per-index "run length so far" (or over run boundaries)
+query(L, R):
+    fullMax  = range-max of complete runs strictly inside (L, R)
+    leftClip  = overlap of L's run within [L, R]
+    rightClip = overlap of R's run within [L, R]
+    return max(fullMax, leftClip, rightClip)
+```
+
+### Boundary handling
+
+- The first and last runs touching the range are truncated; compute their in-range length explicitly and fold into the max.
+
+---
+
+## Complexity Analysis
+
+- **Segment tree (intended):** Build `O(n)`, each query `O(log n)` → `O(n + q log n)`, Space `O(n)`.
+- **Naive (count per query):** `O(n)` per query → `O(n · q)`.

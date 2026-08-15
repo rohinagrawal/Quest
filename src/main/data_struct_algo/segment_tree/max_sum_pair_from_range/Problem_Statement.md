@@ -76,7 +76,31 @@ Process all queries and return one answer per query.
 
 ---
 
-## Notes
+## Key Points
 
-- A brute-force scan per query is `O(n)` per range. With many queries, use a **segment tree**: each node stores the largest and second-largest values in its interval; merging two children also considers the best pair formed by taking the top values from opposite sides.
-- If `arr` is sorted in **non-decreasing** order, the answer for `[L, R]` is simply `arr[R] + arr[R - 1]` in `O(1)` per query, but the segment-tree formulation still applies when the array is not sorted or when the structure is extended (e.g. updates).
+1. Each segment-tree node stores the **two largest** values in its interval (`max1`, `max2`).
+2. **Merge** two children by taking the top two among `{L.max1, L.max2, R.max1, R.max2}`; the best pair sum is `max1 + max2` at the query's covering node.
+3. For a **sorted** array the answer is trivially `arr[R] + arr[R-1]`, but the top-two node generalizes to unsorted arrays and updates.
+
+---
+
+## Approach Hints
+
+### Required idea: segment tree of top-two values
+
+```text
+node = (max1, max2)   // largest and second-largest in the interval
+merge(a, b): take the two largest of {a.max1, a.max2, b.max1, b.max2}
+query(L, R): merge covering nodes -> node q;  answer = q.max1 + q.max2
+```
+
+### Merging detail
+
+- Sort the four candidate values (or do it with a few comparisons) and keep the top two; this preserves the invariant up the tree.
+
+---
+
+## Complexity Analysis
+
+- **Segment tree (intended):** Build `O(n)`, each query `O(log n)` → `O(n + q log n)`, Space `O(n)`.
+- **Naive (scan each range):** `O(n)` per query → `O(n · q)`.

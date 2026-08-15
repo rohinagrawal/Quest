@@ -84,7 +84,35 @@ profits   = [10, 20, 30]
 
 ---
 
-## Notes
+## Key Points
 
-- A job can be scheduled in any free time slot `t` such that `1 <= t <= deadline`.
-- The greedy strategy is to consider jobs by higher profit first and place each job in the latest available slot before its deadline.
+1. Consider jobs by **descending profit**; place each in the **latest** free slot `<= deadline`.
+2. Latest-slot placement keeps earlier slots open for other tight-deadline jobs.
+3. Use a **DSU over time slots** (find the nearest free slot `<= t`) for near-linear, or a boolean slot array for `O(N * maxDeadline)`.
+
+---
+
+## Approach Hints
+
+### Required idea: greedy by profit + latest-slot assignment
+
+```text
+sort jobs by profit descending
+for job (deadline d, profit p):
+    slot = latest free time <= d          // DSU find(d)
+    if slot >= 1:
+        total += p
+        mark slot used; union(slot -> slot - 1)   // next search skips it
+return total
+```
+
+### Finding the latest free slot
+
+- DSU parent `t` points to the nearest free slot `<= t`; after filling `slot`, union it to `slot - 1` so future finds jump over it.
+
+---
+
+## Complexity Analysis
+
+- **Greedy + DSU (intended):** Time `O(N log N)` sort + `O(N α(N))`, Space `O(N)`.
+- **Boolean-slot scan:** `O(N * maxDeadline)` — simpler but slower when deadlines are large.

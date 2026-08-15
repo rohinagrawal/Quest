@@ -76,7 +76,30 @@ end   = [4, 5, 6]
 
 ---
 
-## Notes
+## Key Points
 
-- If an activity ends at time `t`, another activity starting at time `t` can be selected.
-- The greedy strategy is to sort activities by increasing end time and always pick the next activity that starts after or at the end time of the last selected activity.
+1. **Sort by end time** — finishing earliest leaves the most room for later activities.
+2. An activity starting exactly at the previous end is allowed (`start >= lastEnd`).
+3. Sorting by start time or by shortest duration is **not** optimal; end time is the greedy key.
+
+---
+
+## Approach Hints
+
+### Required idea: activity selection (greedy by earliest finish)
+
+```text
+pairs = zip(end, start);  sort by end ascending
+count = 0;  lastEnd = -infinity
+for (e, s) in pairs:
+    if s >= lastEnd:          // no overlap with last chosen
+        count++; lastEnd = e
+return count
+```
+
+---
+
+## Complexity Analysis
+
+- **Greedy (intended):** Time `O(N log N)` for the sort, Space `O(N)`.
+- **Naive (try all subsets):** `O(2^N)` — infeasible.

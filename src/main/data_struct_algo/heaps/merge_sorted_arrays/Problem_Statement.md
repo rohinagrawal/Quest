@@ -87,6 +87,14 @@ arrays = [
 
 ---
 
+## Key Points
+
+1. The min-heap holds **one candidate per array** — its current front; pop the global min, then push that array's next element.
+2. Store `(value, arrayIndex, elementIndex)` so you know which array to advance after each pop.
+3. Skip **empty** arrays when seeding the heap, or they cause index-out-of-bounds on first access.
+
+---
+
 ## Approach Hints
 
 ### Naive Approach:

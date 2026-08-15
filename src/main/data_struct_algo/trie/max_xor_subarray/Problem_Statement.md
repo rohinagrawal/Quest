@@ -33,7 +33,50 @@ The subarray [6] has maximum XOR value = 6
 
 ---
 
+## Input Format
+
+- A single integer array `arr`.
+
+## Output Format
+
+- An integer: the maximum XOR over all contiguous subarrays.
+
+---
+
 ## Constraints
 
 - `1 <= arr.length <= 10^5`
 - `0 <= arr[i] <= 2^31 - 1`
+
+---
+
+## Key Points
+
+1. Subarray XOR `(l..r) = prefix[r] XOR prefix[l-1]`, reducing the task to "max XOR over pairs of prefix values".
+2. Store prefixes in a **binary trie** (fixed 31-bit width, MSB first); greedily follow the **opposite** bit to maximize XOR.
+3. Insert the **empty prefix `0`** first so subarrays starting at index `0` are covered.
+
+---
+
+## Approach Hints
+
+### Required idea: prefix XOR + binary trie (max-XOR query)
+
+```text
+trie.insert(0)                       // empty prefix
+pref = 0; best = 0
+for x in arr:
+    pref ^= x
+    best = max(best, trie.maxXor(pref))   // greedy opposite-bit walk
+    trie.insert(pref)
+return best
+```
+
+- `maxXor(p)` walks bits `30..0`, choosing the child whose bit differs from `p`'s when it exists.
+
+---
+
+## Complexity Analysis
+
+- **Prefix XOR + trie (intended):** Time `O(n · B)` with `B ≈ 31` bits, Space `O(n · B)`.
+- **Naive (all subarrays):** `O(n^2)` XOR computations.

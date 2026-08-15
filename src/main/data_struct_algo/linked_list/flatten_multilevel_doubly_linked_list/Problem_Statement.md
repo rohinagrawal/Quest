@@ -94,6 +94,16 @@ head = []
 **Explanation:**
 - Empty list remains empty
 
+## Input Format
+
+- `head` — the head of a multilevel doubly linked list; each node has `val`, `prev`, `next`, and `child`.
+
+## Output Format
+
+- The head of the flattened single-level doubly linked list, with every `child` pointer set to `null`.
+
+---
+
 ## Constraints
 
 - The number of nodes in the list is in the range `[0, 1000]`
@@ -139,7 +149,7 @@ This shows:
 - Node at index 2 (value 3) has a child starting at index 6 (value 7)
 - Node at index 7 (value 8) has a child starting at index 10 (value 11)
 
-## Approach
+## Approach Hints
 
 ### Recursive Approach (Depth-First Search)
 
@@ -173,3 +183,9 @@ This shows:
 - The flattening order is depth-first: process child lists before continuing with the main list
 - This is a **doubly linked list**, so both forward and backward links must be properly connected
 
+---
+
+## Complexity Analysis
+
+- **DFS / stack flatten (intended):** Time `O(n)` (each node visited once), Space `O(d)` for the recursion stack or explicit stack, where `d` is the max depth.
+- **Copy-to-array then relink:** `O(n)` time but `O(n)` extra space — unnecessary since relinking is in place.

@@ -70,3 +70,34 @@ A = [1, 2, 3, 4, 5]
 
 - `1 <= |A| <= 10^5`
 - `-10^9 <= A[i] <= 10^9`
+
+---
+
+## Key Points
+
+1. **Two heaps:** a max-heap for the lower half, a min-heap for the upper half; the median always sits at their tops.
+2. Keep the sizes balanced so they differ by at most `1` — rebalance after every insert.
+3. Odd count → top of the larger heap; even count → `floor((maxHeap.top + minHeap.top) / 2)`.
+
+---
+
+## Approach Hints
+
+### Required idea: two-heap running median
+
+```text
+lo = max-heap (lower half);  hi = min-heap (upper half)
+insert(x):
+    if lo empty or x <= lo.top: lo.push(x)
+    else:                       hi.push(x)
+    if size(lo) > size(hi) + 1: hi.push(lo.pop())   // rebalance
+    if size(hi) > size(lo):     lo.push(hi.pop())
+median = size odd ? lo.top : floor((lo.top + hi.top) / 2)
+```
+
+---
+
+## Complexity Analysis
+
+- **Two heaps (intended):** Time `O(n log n)` total, Space `O(n)`.
+- **Naive (sort each prefix):** `O(n^2 log n)` — recomputes from scratch every step.

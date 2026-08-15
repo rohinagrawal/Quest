@@ -67,36 +67,34 @@ Equivalent API shape: `solve(arr, operations)` where each operation is an intege
 
 ---
 
-## Notes
+## Key Points
 
-Use a segment tree with lazy propagation. For each segment of length `m`, maintain:
-- `sum = a1 + a2 + ... + am`
-- `sqSum = a1^2 + a2^2 + ... + am^2`
+1. Each node stores **both** `sum` and `sqSum` — the square-sum update needs the plain sum, so you must carry both.
+2. **Two lazy tags** with a priority: a pending **set** overrides any pending add; a later **add** stacks onto an existing set/add.
+3. Range-add's `sqSum` update uses the identity `Σ(a+k)^2 = Σa^2 + 2k·Σa + m·k^2` — update `sqSum` **before** `sum`.
 
-Range-set update (`arr[i] = x`):
-- `sum = m * x`
-- `sqSum = m * x^2`
-  $$
-  \begin{align}
-  a^2 + b^2 + c^2 &\Rightarrow j^2 + j^2 + j^2 \\
-  &= n \cdot j^2
-  \end{align}
-  $$
+---
 
-Range-add update (`arr[i] = arr[i] + k`):
-- `(a1 + k)^2 + ... + (am + k)^2`
-- `= (a1^2 + ... + am^2) + 2k(a1 + ... + am) + m*k^2`
-  $$
-  \begin{align}
-  a^2 + b^2 + c^2 &\Rightarrow (a + k)^2 + (b + k)^2 + (c + k)^2 \\
-  &= a^2 + 2ka + k^2 + b^2 + 2kb + k^2 + c^2 + 2kc + k^2 \\
-  &= (a^2 + b^2 + c^2) + (k^2 + k^2 + k^2) + (2ka + 2kb + 2kc) \\
-  &= (a^2 + b^2 + c^2) + n \cdot k^2 + 2k(a + b + c)
-  \end{align}
-  $$
+## Approach Hints
 
-So:
-- `sqSum = sqSum + 2*k*sum + m*k^2`
-- `sum = sum + m*k`
+### Required idea: segment tree, lazy `set` + `add`, tracking `sum` and `sqSum`
 
-This gives `O(log n)` per update/query.
+For a segment of length `m`:
+
+```text
+range-set to x:   sum = m*x;              sqSum = m*x*x
+range-add k:      sqSum += 2*k*sum + m*k*k     // uses OLD sum
+                  sum   += m*k                  // then update sum
+```
+
+### Lazy composition
+
+- Apply `set` by clearing any pending `add`; apply `add` on top of an existing `set`/`add`.
+- Push tags to children before descending; a query sums the `sqSum` of covered nodes.
+
+---
+
+## Complexity Analysis
+
+- **Segment tree + lazy (intended):** Time `O((n + q) log n)`, Space `O(n)`.
+- **Naive (recompute range each query/update):** `O(n)` per operation → `O(n · q)`.

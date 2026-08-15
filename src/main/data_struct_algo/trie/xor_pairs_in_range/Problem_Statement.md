@@ -42,8 +42,52 @@ All nice pairs (i, j) are as follows:
 
 ---
 
+## Input Format
+
+- `nums` — a 0-indexed integer array.
+- `low`, `high` — the inclusive XOR range bounds.
+
+## Output Format
+
+- An integer: the count of pairs `(i, j)` with `i < j` and `low <= nums[i] XOR nums[j] <= high`.
+
+---
+
 ## Constraints
 
 - `1 <= nums.length <= 2 * 10^4`
 - `1 <= nums[i] <= 2 * 10^4`
 - `1 <= low <= high <= 2 * 10^4`
+
+---
+
+## Key Points
+
+1. **Range → prefix difference:** `count(low <= XOR <= high) = countLE(high) - countLE(low - 1)`.
+2. A **binary trie** with per-node subtree counts answers `countLE(x, limit)` = how many stored values `y` have `x XOR y <= limit`, in `O(B)`.
+3. Insert elements **incrementally** (query before insert) so each unordered pair is counted exactly once.
+
+---
+
+## Approach Hints
+
+### Required idea: binary trie with counts + countXorLessOrEqual
+
+```text
+answer = 0; trie (nodes carry a count)
+for x in nums:
+    answer += query(x, high) - query(x, low - 1)   // over already-inserted values
+    trie.insert(x)
+return answer
+```
+
+### query(x, limit)
+
+- Walk bits MSB→LSB; at each bit look at `limit`'s bit: if it is `1`, all values in the child matching `x`'s bit are guaranteed `<=` (add that subtree's count) and descend the other child; if `0`, descend the child that keeps XOR's bit `0`.
+
+---
+
+## Complexity Analysis
+
+- **Binary trie (intended):** Time `O(n · B)` with `B ≈ 15` bits, Space `O(n · B)`.
+- **Naive (all pairs):** `O(n^2)` XOR checks.

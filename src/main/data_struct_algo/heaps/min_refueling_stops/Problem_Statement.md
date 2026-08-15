@@ -97,3 +97,38 @@ D = [60, 30, 30, 40]
 - `0 < C[i] < A`
 - `1 <= D[i] <= 10^9`
 - `C` is strictly increasing
+
+---
+
+## Key Points
+
+1. **Lazy greedy with a max-heap:** don't refuel at a station immediately — bank its fuel as an option and spend it only when you'd otherwise run out.
+2. When stuck short of the next point, pop the **largest** banked fuel; each pop is one stop.
+3. If the heap is empty and you still can't advance, the destination is unreachable → `-1`.
+
+---
+
+## Approach Hints
+
+### Required idea: max-heap of deferred fuel
+
+```text
+heap = max-heap;  fuel = B;  stops = 0;  i = 0
+for target in [C[0], C[1], ..., A]:        // each station, then A
+    while fuel < target:
+        if heap empty: return -1
+        fuel += heap.pop(); stops++        // use biggest banked fuel
+    if target is a station: heap.push(D[i]); i++
+return stops
+```
+
+### Reframing
+
+- Passing a station "unlocks" its fuel as a future option; you commit to the best options only as far as needed to keep moving.
+
+---
+
+## Complexity Analysis
+
+- **Max-heap greedy (intended):** Time `O(n log n)`, Space `O(n)`.
+- **DP (`dp[t]` = farthest reach with `t` stops):** `O(n^2)` — correct but heavier.

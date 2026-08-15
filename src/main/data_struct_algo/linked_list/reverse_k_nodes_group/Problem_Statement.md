@@ -60,6 +60,17 @@ After:  3 -> 2 -> 1 -> 4 -> 5
 
 ---
 
+## Input Format
+
+- `head` — the head of a singly linked list.
+- `k` — the group size to reverse.
+
+## Output Format
+
+- The head of the modified list, with each complete group of `k` nodes reversed and the trailing remainder left intact.
+
+---
+
 ## Constraints
 
 - The number of nodes in the list is `n`

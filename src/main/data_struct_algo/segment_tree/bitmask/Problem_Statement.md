@@ -89,8 +89,33 @@ Equivalent API shape: `sumSetBitQueries(n, operations)` where `operations[i] = [
 
 ---
 
-## Notes
+## Key Points
 
-- Flipping every bit in a range is the same as applying XOR with `1` at each position in `[l, r]`.
-- A naive array scan per operation is `O(n · q)` and is too slow at these limits.
-- Use a **segment tree with lazy propagation** (or similar) to support range flip and range popcount in `O(log n)` per operation.
+1. A range **flip** = XOR with `1`; on a segment node it just does `ones = length - ones` (zeros become ones).
+2. **Lazy propagation:** store a pending-flip boolean per node; a second flip cancels the first (`lazy ^= 1`).
+3. Query returns a **count of ones**; accumulate query answers modulo `1_000_000_007`.
+
+---
+
+## Approach Hints
+
+### Required idea: segment tree with lazy range-flip
+
+```text
+node stores: ones = number of 1s in its segment
+flip(node): ones = len(node) - ones; lazy[node] ^= 1
+update(l, r): standard lazy range update calling flip on covered nodes
+query(l, r): sum of ones over covered nodes (push lazy down first)
+answer += query(l, r) for each type-2 op, mod 1e9+7
+```
+
+### Lazy push-down
+
+- Before descending into children, if `lazy[node]` is set, `flip` both children and clear `lazy[node]`.
+
+---
+
+## Complexity Analysis
+
+- **Segment tree + lazy (intended):** Time `O((n + q) log n)`, Space `O(n)`.
+- **Naive array scan per op:** `O(n · q)` — up to `10^{10}`, far too slow.

@@ -39,31 +39,54 @@ A palindrome is a sequence that reads the same forwards and backwards. For examp
 - Each single character is a palindrome
 - Length: **1**
 
+## Input Format
+
+- The `head` of a singly linked list; each node holds one lowercase letter.
+
+## Output Format
+
+- An integer: the length of the longest contiguous palindromic run of nodes.
+
+---
+
 ## Constraints
 
-- `1 ≤ length of linked list ≤ 10^5`
-- Each node contains a lowercase English letter ('a' to 'z')
+- `1 <= length of linked list <= 10^5`
+- Each node contains a lowercase English letter (`'a'` to `'z'`)
 
-## Approach
+---
 
-There are multiple approaches to solve this problem:
+## Key Points
 
-### Approach 1: Brute Force
-- For each node, consider it as a potential center or start of a palindrome
-- Expand around the center or check all subsegments starting from that node
-- Time Complexity: O(n^2), Space Complexity: O(1)
+1. A linked list has **no random access**, so "expand around center" needs the sequence in an array — copy the characters out first.
+2. Check **both** odd-length centers (single node) and even-length centers (between two nodes).
+3. Every single node is a palindrome of length `1`, so the answer is at least `1`.
 
-### Approach 2: Convert to Array
-- Convert the linked list to an array/string
-- Apply standard longest palindromic substring algorithms
-- Time Complexity: O(n^2) or O(n) with Manacher's algorithm
-- Space Complexity: O(n)
+---
 
-### Approach 3: Two-Pointer with Reverse
-- For each possible center, use two pointers to expand outwards
-- Check both odd-length and even-length palindromes
-- Time Complexity: O(n^2), Space Complexity: O(1)
+## Approach Hints
 
-## Note
+### Required idea: copy to array, expand around centers
 
-This problem requires careful handling of linked list traversal and comparison of nodes in forward and reverse directions.
+```text
+s = characters collected from the list (index 0..n-1)
+best = 1
+for c in 0..n-1:
+    best = max(best, expand(s, c, c))     // odd-length center
+    best = max(best, expand(s, c, c+1))   // even-length center
+return best
+
+expand(s, l, r): while l>=0 and r<n and s[l]==s[r]: l--; r++
+                 return r - l - 1          // matched length
+```
+
+### Faster option
+
+- Manacher's algorithm gives `O(n)` if the `O(n^2)` expand is too slow for the largest inputs.
+
+---
+
+## Complexity Analysis
+
+- **Expand-around-center (intended):** Time `O(n^2)`, Space `O(n)` for the array copy.
+- **Manacher's:** Time `O(n)`, Space `O(n)` — optimal but more intricate.

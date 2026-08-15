@@ -61,6 +61,17 @@ board = [
 
 ---
 
+## Input Format
+
+- `words` — array of target words.
+- `board` — a 2D grid of lowercase letters.
+
+## Output Format
+
+- The list of words from `words` that can be formed on the board (order unspecified; de-duplicated).
+
+---
+
 ## Constraints
 
 - `1 <= words.length <= 10^4`
@@ -71,9 +82,37 @@ board = [
 
 ---
 
-## Notes
+## Key Points
 
-- A word can start from any cell in the grid
-- Adjacent cells are horizontal or vertical neighbors (not diagonal)
-- Each cell can be used at most once per word
-- Different words can reuse the same cells
+1. Build a **Trie of all words** and DFS the grid *once*, following trie edges — dead prefixes are pruned instantly (far better than searching each word separately).
+2. Mark a cell **visited during the current path** (no reuse within one word); **unmark on backtrack** so other paths can use it.
+3. When a trie node's end-flag is reached, record its word; different words may reuse the same cells.
+
+---
+
+## Approach Hints
+
+### Required idea: Trie + DFS backtracking
+
+```text
+build trie from words
+for each cell (r, c):
+    dfs(r, c, root)
+
+dfs(r, c, node):
+    ch = board[r][c]
+    if node has no child ch: return
+    nxt = node.child[ch]
+    if nxt.isEnd: results.add(nxt.word)      // de-dup
+    mark (r, c) visited
+    for (nr, nc) in 4-neighbors:
+        if in-bounds and not visited: dfs(nr, nc, nxt)
+    unmark (r, c)
+```
+
+---
+
+## Complexity Analysis
+
+- **Trie + DFS (intended):** build `O(sum of word lengths)`; search `O(R · C · 4^L)` worst case, heavily pruned by the trie (`L` = max word length).
+- **Naive (DFS per word):** `O(words · R · C · 4^L)` — repeats grid work for every word.
