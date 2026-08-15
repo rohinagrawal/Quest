@@ -6,8 +6,8 @@ class Code {
 public:
 
     struct Station{
-        int fuel;
         int position;
+        int fuel;
     };
 
     int minRefuelStops(int target, int startFuel, vector<vector<int>>& stations) {
@@ -21,8 +21,8 @@ public:
         while (currFuel<target) {
             while (stationNo < stations.size() && stations[stationNo][0]<=currFuel) {
                 Station s;
-                s.fuel = stations[stationNo][1];
                 s.position = stations[stationNo][0];
+                s.fuel = stations[stationNo][1];
                 stationHeap.push(s);
                 stationNo++;
             }
