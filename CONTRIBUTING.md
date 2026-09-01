@@ -40,10 +40,10 @@ Keep generated files, compiled binaries, IDE caches, and local scratch files out
    - Examples
    - Explanation of edge cases, if useful
 
-3. Add one or more implementations:
+3. Add one or more implementations, each with a matching test:
 
-   - `Code.java`
-   - `Code.cpp`
+   - `Code.java` + `src/test/data_struct_algo/<topic>/<problem_name>/CodeTest.java` (JUnit 5)
+   - `Code.cpp` + `src/test/data_struct_algo/<topic>/<problem_name>/Tests.cpp` (assert-based, `#include`-ing `Code.cpp` via a relative path; run with a real GCC — `g++-16` on macOS via `brew install gcc`, since plain `g++` there is usually Apple Clang and can't compile `#include <bits/stdc++.h>`)
    - `Code.js`
    - `Code_Optimized.<ext>` when adding a materially different optimized approach
 
@@ -97,10 +97,10 @@ Before opening a pull request:
 
 - Run the relevant tests from IntelliJ or your configured Java runner.
 - Add or update JUnit tests when changing machine-coding behavior.
-- Manually validate standalone DSA solutions with the examples from the problem statement.
+- Run `mvn -q -Dtest=<package>.CodeTest test` for Java DSA solutions, and `g++-16 -std=c++17 Tests.cpp -o /tmp/test && /tmp/test` (from `src/test/data_struct_algo/<topic>/<problem_name>/`; use whatever real-GCC binary `brew install gcc` gave you if the version differs) for C++ ones — both should pass using the examples from `Problem_Statement.md`.
 - Confirm Markdown renders cleanly for any new or changed documentation.
 
-The project currently uses custom source roots registered in `Quest.iml`, not the default Maven `src/main/java` and `src/test/java` layout. If you change the build layout, update the docs and project configuration in the same pull request.
+The project currently uses custom source roots registered in `Quest.iml`, not the default Maven `src/main/java` and `src/test/java` layout. `pom.xml` also registers these roots via the `build-helper-maven-plugin`, so `mvn compile` and `mvn test` work from the CLI, not just from IntelliJ. If you change the build layout, update the docs and project configuration in the same pull request.
 
 ## Pull Request Checklist
 
@@ -108,6 +108,7 @@ Before submitting, verify that:
 
 - The folder and file names follow the repository conventions.
 - Every new problem has a `Problem_Statement.md`.
+- Every new DSA problem's `Code.java`/`Code.cpp` has a matching `CodeTest.java`/`Tests.cpp` that passes.
 - Every implementation compiles or runs in its intended environment.
 - New machine-coding behavior has meaningful tests.
 - The pull request is focused on one problem, module, or documentation improvement.

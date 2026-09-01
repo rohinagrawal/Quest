@@ -39,6 +39,13 @@
       "docs": [".agents/rules/quest-conventions.md", "CONTRIBUTING.md"]
     },
     {
+      "id": "rule-dsa-known-issues",
+      "kind": "rule",
+      "source": ".agents/rules/dsa-known-issues.md",
+      "hosts": ["codex", "cursor", "claude"],
+      "docs": [".agents/rules/dsa-known-issues.md"]
+    },
+    {
       "id": "skill-agents-bootstrap",
       "kind": "skill",
       "source": ".agents/skills/agents-bootstrap/SKILL.md",
