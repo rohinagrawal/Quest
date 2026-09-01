@@ -19,7 +19,7 @@ Machine-coding tests live under `src/test/machine_coding/<module_name>/`, and DS
 - Use `mvn test` when tests are explicitly requested.
 - Prefer running the relevant demo class or JUnit test from IntelliJ for machine-coding modules.
 - Compile and run C++ solutions with a real GCC, e.g. `g++-16` on macOS via `brew install gcc` (plain `g++` there is usually an Apple Clang shim with no GNU `libstdc++`, so it cannot compile `#include <bits/stdc++.h>`); there is no repo-wide C++ build file.
-- Run `mvn -q -Dtest=<package>.CodeTest test` for Java DSA solutions, and `g++-16 -std=c++17 Tests.cpp -o /tmp/test && /tmp/test` for C++ ones, to validate against the examples in each `Problem_Statement.md`.
+- Run `mvn -q -Dtest=<package>.CodeTest test` for Java DSA solutions, and `g++-16 -std=c++17 Tests.cpp -o /tmp/test && /tmp/test` (from `src/test/data_struct_algo/<topic>/<problem_name>/`) for C++ ones, to validate against the examples in each `Problem_Statement.md`.
 
 ## Validation Notes
 

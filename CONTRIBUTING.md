@@ -43,7 +43,7 @@ Keep generated files, compiled binaries, IDE caches, and local scratch files out
 3. Add one or more implementations, each with a matching test:
 
    - `Code.java` + `src/test/data_struct_algo/<topic>/<problem_name>/CodeTest.java` (JUnit 5)
-   - `Code.cpp` + a colocated `Tests.cpp` (assert-based, run with a real GCC — `g++-16` on macOS via `brew install gcc`, since plain `g++` there is usually Apple Clang and can't compile `#include <bits/stdc++.h>`)
+   - `Code.cpp` + `src/test/data_struct_algo/<topic>/<problem_name>/Tests.cpp` (assert-based, `#include`-ing `Code.cpp` via a relative path; run with a real GCC — `g++-16` on macOS via `brew install gcc`, since plain `g++` there is usually Apple Clang and can't compile `#include <bits/stdc++.h>`)
    - `Code.js`
    - `Code_Optimized.<ext>` when adding a materially different optimized approach
 
@@ -97,7 +97,7 @@ Before opening a pull request:
 
 - Run the relevant tests from IntelliJ or your configured Java runner.
 - Add or update JUnit tests when changing machine-coding behavior.
-- Run `mvn -q -Dtest=<package>.CodeTest test` for Java DSA solutions, and `g++-16 -std=c++17 Tests.cpp -o /tmp/test && /tmp/test` (from the problem's folder; use whatever real-GCC binary `brew install gcc` gave you if the version differs) for C++ ones — both should pass using the examples from `Problem_Statement.md`.
+- Run `mvn -q -Dtest=<package>.CodeTest test` for Java DSA solutions, and `g++-16 -std=c++17 Tests.cpp -o /tmp/test && /tmp/test` (from `src/test/data_struct_algo/<topic>/<problem_name>/`; use whatever real-GCC binary `brew install gcc` gave you if the version differs) for C++ ones — both should pass using the examples from `Problem_Statement.md`.
 - Confirm Markdown renders cleanly for any new or changed documentation.
 
 The project currently uses custom source roots registered in `Quest.iml`, not the default Maven `src/main/java` and `src/test/java` layout. `pom.xml` also registers these roots via the `build-helper-maven-plugin`, so `mvn compile` and `mvn test` work from the CLI, not just from IntelliJ. If you change the build layout, update the docs and project configuration in the same pull request.
