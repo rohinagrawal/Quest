@@ -32,4 +32,4 @@ Use lowercase `snake_case` for topic, problem, and module folder names.
 - Keep changes focused on one problem, module, or documentation improvement.
 - Avoid broad formatting churn in unrelated files.
 - Match the language, naming, and structure of neighboring solutions in the same topic folder.
-- Copy starter layouts from `src/main/resources/template/` when creating new entries.
+- Copy starter layouts from `src/main/resources/template/` when creating new entries. For DSA problems, also copy the matching test template from `src/test/resources/template/dsa_topic_name/question_name/` (`CodeTest.java`, `Tests.cpp`) into `src/test/data_struct_algo/<topic>/<problem_name>/`.

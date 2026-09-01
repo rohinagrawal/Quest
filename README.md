@@ -11,7 +11,8 @@ Each problem is organized as a small, reviewable module with a problem statement
 | Data Structures and Algorithms | `src/main/data_struct_algo` | Topic-based problem folders with `Problem_Statement.md` and solution files such as `Code.java`, `Code.cpp`, or `Code.js`. |
 | Machine Coding | `src/main/machine_coding` | Object-oriented implementations for larger exercises such as an in-memory message broker and logger. |
 | System Design | `src/main/system_design` | Problem statements and Excalidraw design artifacts for system-design practice. |
-| Templates | `src/main/resources/template` | Starter folder structures for new DSA and system-design entries. |
+| Templates | `src/main/resources/template` | Starter folder structures for new DSA, machine-coding, and system-design entries. |
+| Templates | `src/test/resources/template` | Matching `CodeTest.java`/`Tests.cpp` starter templates for new DSA entries. |
 | Tests | `src/test/machine_coding` | JUnit tests for machine-coding modules. |
 | Tests | `src/test/data_struct_algo` | `CodeTest.java` (JUnit) and `Tests.cpp` (assert-based) tests for DSA solutions. |
 
@@ -46,7 +47,8 @@ Quest/
     │       └── uber/
     └── test/
         ├── data_struct_algo/
-        └── machine_coding/
+        ├── machine_coding/
+        └── resources/template/
 ```
 
 ## Explore the Repository
