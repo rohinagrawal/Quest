@@ -23,7 +23,7 @@ Machine-coding tests live under `src/test/machine_coding/<module_name>/`.
 
 ## Validation Notes
 
-- Do not assume Maven discovers every Java source file because of the custom layout.
+- `mvn -q -DskipTests compile` and `mvn test` now discover every custom source root via the `build-helper-maven-plugin` declared in `pom.xml` — both commands work from the CLI, not just from IntelliJ.
 - Do not add build workarounds until the simplest root-level command for the task has been tried.
 - If you change the build layout, update `Quest.iml`, docs, and `.agents/rules/` in the same change.
 
@@ -36,3 +36,5 @@ java --version
 mvn --version
 python3 .agents/scripts/validate-agent-assets.py --mode adapters
 ```
+
+- Because every DSA problem package defines a class literally named `Code` (and, once tests exist, `CodeTest`), `-Dtest=CodeTest` matches every DSA test in the repo. Use the fully-qualified name to run one, e.g. `mvn -q -Dtest=array.max_abs_distance.CodeTest test`.
