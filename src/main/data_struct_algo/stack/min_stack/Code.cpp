@@ -1,5 +1,4 @@
-#include <stack>
-#include <climits>
+#include <bits/stdc++.h>
 
 using namespace std;
 
