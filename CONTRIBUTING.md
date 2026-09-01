@@ -100,7 +100,7 @@ Before opening a pull request:
 - Run `mvn -q -Dtest=<package>.CodeTest test` for Java DSA solutions, and `g++-16 -std=c++17 Tests.cpp -o /tmp/test && /tmp/test` (from the problem's folder; use whatever real-GCC binary `brew install gcc` gave you if the version differs) for C++ ones — both should pass using the examples from `Problem_Statement.md`.
 - Confirm Markdown renders cleanly for any new or changed documentation.
 
-The project currently uses custom source roots registered in `Quest.iml`, not the default Maven `src/main/java` and `src/test/java` layout. If you change the build layout, update the docs and project configuration in the same pull request.
+The project currently uses custom source roots registered in `Quest.iml`, not the default Maven `src/main/java` and `src/test/java` layout. `pom.xml` also registers these roots via the `build-helper-maven-plugin`, so `mvn compile` and `mvn test` work from the CLI, not just from IntelliJ. If you change the build layout, update the docs and project configuration in the same pull request.
 
 ## Pull Request Checklist
 
@@ -108,6 +108,7 @@ Before submitting, verify that:
 
 - The folder and file names follow the repository conventions.
 - Every new problem has a `Problem_Statement.md`.
+- Every new DSA problem's `Code.java`/`Code.cpp` has a matching `CodeTest.java`/`Tests.cpp` that passes.
 - Every implementation compiles or runs in its intended environment.
 - New machine-coding behavior has meaningful tests.
 - The pull request is focused on one problem, module, or documentation improvement.
