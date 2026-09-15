@@ -11,8 +11,10 @@ Each problem is organized as a small, reviewable module with a problem statement
 | Data Structures and Algorithms | `src/main/data_struct_algo` | Topic-based problem folders with `Problem_Statement.md` and solution files such as `Code.java`, `Code.cpp`, or `Code.js`. |
 | Machine Coding | `src/main/machine_coding` | Object-oriented implementations for larger exercises such as an in-memory message broker and logger. |
 | System Design | `src/main/system_design` | Problem statements and Excalidraw design artifacts for system-design practice. |
-| Templates | `src/main/resources/template` | Starter folder structures for new DSA and system-design entries. |
+| Templates | `src/main/resources/template` | Starter folder structures for new DSA, machine-coding, and system-design entries. |
+| Templates | `src/test/resources/template` | Matching `CodeTest.java`/`Tests.cpp` starter templates for new DSA entries. |
 | Tests | `src/test/machine_coding` | JUnit tests for machine-coding modules. |
+| Tests | `src/test/data_struct_algo` | `CodeTest.java` (JUnit) and `Tests.cpp` (assert-based) tests for DSA solutions. |
 
 ## Repository Layout
 
@@ -44,7 +46,9 @@ Quest/
     │       ├── ticketmaster/
     │       └── uber/
     └── test/
-        └── machine_coding/
+        ├── data_struct_algo/
+        ├── machine_coding/
+        └── resources/template/
 ```
 
 ## Explore the Repository
@@ -264,7 +268,7 @@ Prerequisites:
 - Maven 3.9 or newer
 - IntelliJ IDEA or another editor that can work with custom Java source roots
 
-This repository intentionally keeps Java sources under topic folders such as `src/main/data_struct_algo` and `src/main/machine_coding` instead of the default Maven `src/main/java` layout. The checked-in `Quest.iml` marks the current source and test roots for IntelliJ.
+This repository intentionally keeps Java sources under topic folders such as `src/main/data_struct_algo` and `src/main/machine_coding` instead of the default Maven `src/main/java` layout. The checked-in `Quest.iml` marks these source and test roots for IntelliJ, and `pom.xml` also registers them via the `build-helper-maven-plugin`, so `mvn compile` and `mvn test` work from the CLI as well.
 
 Useful checks:
 
@@ -273,7 +277,7 @@ java --version
 mvn --version
 ```
 
-For Java machine-coding work, open the project in IntelliJ and run the relevant demo or JUnit test from the module source roots. The Maven `pom.xml` declares Java 21, Lombok, logging, Jackson, JUnit, AssertJ, and Mockito dependencies, but the current source layout is not the standard Maven layout.
+For Java machine-coding work, open the project in IntelliJ and run the relevant demo or JUnit test from the module source roots. The Maven `pom.xml` declares Java 21, Lombok, logging, Jackson, JUnit, AssertJ, and Mockito dependencies, and registers the custom source roots via the `build-helper-maven-plugin`, so `mvn compile` and `mvn test` work from the CLI even though the source layout is not the standard Maven layout.
 
 ## How to Use
 
